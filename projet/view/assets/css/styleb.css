@@ -1,0 +1,105 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  body {
+    background-color: #ffffff;
+  }
+  
+  .container {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .sidebar {
+    width: 250px;
+    background-color: #2c3e50;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  }
+  
+  .logo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 120px; /* hauteur plus grande pour laisser respirer le logo */
+    padding: 20px 0;
+  }
+  
+  .logo img {
+    width: 80px;       /* taille bien visible sans être trop grande */
+    height: auto;      /* garde les proportions originales */
+    border-radius: 16px; /* coins légèrement arrondis pour un look doux */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* ombre douce pour le relief */
+    transition: transform 0.3s ease; /* effet au survol */
+  }
+  
+  .logo img:hover {
+    transform: scale(1.1); /* effet de zoom subtil au survol */
+  }
+  
+  
+  .section-title {
+    font-size: 14px;
+    color: #759ef6;
+    margin: 20px 0 10px;
+    padding-left: 10px;
+  }
+  
+  .nav-link {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: #7078ea;
+    background-color: #fff;
+    margin: 5px 0;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+  
+  .nav-link i {
+    margin-right: 10px; /* espace entre l'icône et le texte */
+    font-size: 18px;    /* taille de l'icône */
+    color: #4851f0;     /* couleur de l'icône */
+    transition: color 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #1276f8;
+    color: #65a6fa;
+    transform: translateX(5px);
+  }
+  
+  .nav-link:hover i {
+    color: #448df4;     /* couleur au survol */
+  }
+  
+  .nav-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 4px;
+    height: 60%;
+    background-color: transparent;
+    border-radius: 2px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-link:hover::before {
+    background-color: #4391ae;
+  }
+  
+  .content {
+    flex: 1;
+    padding: 40px;
+  }
+  
