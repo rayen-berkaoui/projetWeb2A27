@@ -1,0 +1,27 @@
+# Enable rewrite engine
+RewriteEngine On
+
+# Set CORS headers for API requests
+<IfModule mod_headers.c>
+    # Only allow specific origins for local development and testing
+    SetEnvIf Origin "^http(s)?://(.+\.)?(localhost|127\.0\.0\.1)(:\d+)?$" ORIGIN=$0
+    Header always set Access-Control-Allow-Origin "%{ORIGIN}e" env=ORIGIN
+    # Fall back to allowing all origins if no match (change this in production!)
+    Header always set Access-Control-Allow-Origin "*" env=!ORIGIN
+    Header always set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, X-Requested-With"
+    Header always set Access-Control-Allow-Credentials "true"
+    
+    # Handle preflight OPTIONS requests
+    RewriteCond %{REQUEST_METHOD} OPTIONS
+    RewriteRule ^(.*)$ $1 [R=200,L]
+</IfModule>
+
+# API endpoint for feedback submissions
+RewriteRule ^api/feedbacks$ dashboard.php?action=api_submit [QSA,L]
+
+# Allow direct access to dashboard.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+
