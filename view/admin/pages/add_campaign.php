@@ -1,40 +1,55 @@
 <?php
-// Update with your real DB credentials
-$host = 'localhost';
-$dbname = 'db_html';
-$username = 'your_username';
-$password = 'your_password';
+require_once '../../../src/controll/routes/admin/MarketingController.php';
+
+header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("DB connection failed: " . $e->getMessage());
-}
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new Exception('Invalid request method');
+    }
 
-// Get POST data
-$id = $_POST['id'] ?? null;
-$name = $_POST['nom_compagne'] ?? '';
-$start = $_POST['date_debut'] ?? '';
-$end = $_POST['date_fin'] ?? '';
-$budget = $_POST['budget'] ?? '';
-$description = $_POST['description'] ?? '';
+    // Validate required fields
+    $required = ['nom_compagne', 'date_debut', 'date_fin', 'budget'];
+    $missing = array_filter($required, function($field) {
+        return !isset($_POST[$field]) || trim($_POST[$field]) === '';
+    });
 
-if ($name && $start && $end && is_numeric($budget)) {
-    $stmt = $pdo->prepare("INSERT INTO campaigns (ID, Ncompagne, DateD, DateF, Budget, `Desc`)
-                           VALUES (:id, :name, :start, :end, :budget, :description)");
-    $stmt->execute([
-        ':id' => $id,
-        ':name' => $name,
-        ':start' => $start,
-        ':end' => $end,
-        ':budget' => $budget,
-        ':description' => $description
+    if (!empty($missing)) {
+        throw new Exception('Missing required fields: ' . implode(', ', $missing));
+    }
+
+    // Create campaign data array
+    $campaignData = [
+        'nom_compagne' => trim($_POST['nom_compagne']),
+        'date_debut' => $_POST['date_debut'],
+        'date_fin' => $_POST['date_fin'],
+        'budget' => floatval($_POST['budget']),
+        'description' => isset($_POST['description']) ? trim($_POST['description']) : ''
+    ];
+
+    $controller = new MarketingController();
+    $newId = $controller->addCampaign($campaignData);
+
+    if ($newId) {
+        $campaignData['id'] = $newId;
+        echo json_encode([
+            'success' => true,
+            'message' => 'Campaign added successfully',
+            'data' => $campaignData
+        ]);
+    } else {
+        throw new Exception('Failed to add campaign');
+    }
+} catch (Exception $e) {
+    error_log("Error in add_campaign.php: " . $e->getMessage());
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage(),
+        'debug' => [
+            'post_data' => $_POST,
+            'trace' => $e->getTraceAsString()
+        ]
     ]);
-
-    header("Location: marketing.php");
-    exit;
-} else {
-    echo "Invalid input data.";
 }
-?>

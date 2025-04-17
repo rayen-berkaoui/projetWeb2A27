@@ -1,5 +1,5 @@
-<?php
-/*class DashboardController
+<?php 
+class DashboardController
 {
     public function index()
     {

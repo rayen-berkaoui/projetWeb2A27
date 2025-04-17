@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars(isset($page_title) ? $page_title : 'Dashboard') ?></title>
     <link href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/view/assets/css/dashboard.css" rel="stylesheet">
-    <script src="<?= base_url('view/assets/js/dashboard.js') ?>"></script>
+    <script src="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/view/assets/js/dashboard.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         body {
@@ -20,8 +20,10 @@
             background: #ffffff;
             border-radius: 20px;
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            margin: 20px;
+            margin: 0; /* Remove margin */
             color: #2e2e2e;
+            height: calc(100vh - 100px); /* Take full height minus header */
+            overflow: auto; /* Add scroll if content overflows */
         }
 
         .header-actions {
@@ -31,6 +33,11 @@
             margin-bottom: 25px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eef2f7;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            padding: 20px 0;
         }
 
         .header-actions h1 {
@@ -521,6 +528,8 @@
         .dashboard-container {
             display: flex;
             min-height: 100vh;
+            margin-left: 0; /* Remove margin */
+            width: 100%; /* Take full width */
         }
 
         .sidebar {
@@ -531,13 +540,16 @@
             top: 0;
             left: 0;
             height: 100vh;
+            z-index: 1000;
         }
 
         .content-area {
             flex: 1;
-            margin-left: 260px;
+            margin-left: 260px; /* Move margin from container to content area */
             padding: 20px;
             background: #f0f4f8;
+            min-height: 100vh;
+            width: calc(100% - 260px); /* Ensure content takes remaining space */
         }
 
         .top-header {
@@ -552,8 +564,9 @@
         }
 
         .page-content {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: none; /* Remove max-width constraint */
+            margin: 0;
+            height: 100%;
         }
 
         /* Responsive Table */
@@ -596,9 +609,14 @@
         }
 
         @media (max-width: 480px) {
+            .dashboard-container {
+                margin-left: 0;
+                width: 100%;
+            }
+
             .content-area {
                 margin-left: 0;
-                padding: 10px;
+                width: 100%;
             }
 
             .sidebar {
@@ -668,30 +686,12 @@
 <body>
     <div class="dashboard-container">
         <!-- Sidebar Navigation -->
-        <aside class="sidebar"></aside>
+        <aside class="sidebar">
             <?php include 'partials/sidebar.php' ?>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="content-area">
-            <!-- Top Header Bar -->
-            <header class="top-header">
-                <div class="header-left">
-                    <h1><?php echo htmlspecialchars(isset($page_title) ? $page_title : 'Dashboard'); ?></h1>
-                </div>
-                <div class="header-right">
-                    <div class="user-menu">
-                        <span class="user-avatar">👤</span>
-                        <span class="user-name">Admin</span>
-                    </div>
-                </div>
-            </header>
-
-            <!-- Page Content -->
-            <div class="page-content">
-                <?php echo isset($content) ? $content : ''; ?>
-            </div>
-        </main>
+        <!-- Main Content Area - This will be populated by child views -->
+        <?php echo isset($content) ? $content : ''; ?>
     </div>
 </body>
 </html>

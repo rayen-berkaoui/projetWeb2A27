@@ -1,5 +1,5 @@
 <?php
-/*class AdminController {
+class AdminController {
     protected function render($view, $data = []) {
         extract($data);
         $content = view($view, $data);
