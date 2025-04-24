@@ -1,26 +1,34 @@
-<?php $active_menu = 'articles'; include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
+<?php $active_menu = 'articles'; include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php'; 
+?>
 
 <div style="margin-left: 270px; padding: 20px;">
     <h1>✏️ Edit Article</h1>
 
     <!-- Start of form -->
-    <form method="POST" action="/2A27/admin/articles/update/<?= $article['id'] ?>">
+    <form method="POST" action="/2A27/admin/articles/update/<?php echo $article['id']; ?>">
         <!-- Type input field -->
         <div class="form-group">
             <label for="type">Type</label>
-            <input type="text" name="type" id="type" value="<?= htmlspecialchars($article['type']) ?>" class="form-input" required>
+            <select name="type_id" id="type_id" class="form-input" required>
+    <?php foreach ($types as $type): ?>
+        <option value="<?= $type['id'] ?>" <?= $type['id'] == $article['type_id'] ? 'selected' : '' ?>>
+            <?= htmlspecialchars($type['nom']) ?>
+        </option>
+    <?php endforeach; ?>
+</select>
+
         </div>
 
         <!-- Author input field -->
         <div class="form-group">
             <label for="author">Author</label>
-            <input type="text" name="author" id="author" value="<?= htmlspecialchars($article['author']) ?>" class="form-input" required>
+            <input type="text" name="author" id="author" value="<?= htmlspecialchars($article['author'] ?? '') ?>" class="form-input" required>
         </div>
 
         <!-- Content textarea -->
         <div class="form-group">
             <label for="content">Content</label>
-            <textarea name="content" id="content" class="form-input" required><?= htmlspecialchars($article['content']) ?></textarea>
+            <textarea name="content" id="content" class="form-input" required><?= htmlspecialchars($article['content'] ?? '') ?></textarea>
         </div>
 
         <!-- Submit button -->
@@ -30,9 +38,8 @@
     </form>
 </div>
 
-<!-- Inline CSS Styles -->
+<!-- Full CSS Styling -->
 <style>
-    /* Reset and Base Styles */
     * {
         margin: 0;
         padding: 0;
@@ -45,25 +52,31 @@
         color: #333;
     }
 
-    /* Form Styles */
+    h1 {
+        font-size: 1.8rem;
+        margin-bottom: 20px;
+    }
+
     .form-group {
         margin-bottom: 15px;
     }
 
-    .form-input, textarea {
+    .form-input,
+    textarea {
         width: 100%;
         padding: 10px;
         font-size: 1rem;
         border: 1px solid #ccc;
         border-radius: 5px;
+        resize: vertical;
     }
 
-    .form-input:focus, textarea:focus {
+    .form-input:focus,
+    textarea:focus {
         border-color: #3498db;
         outline: none;
     }
 
-    /* Button Styles */
     .btn {
         padding: 10px 20px;
         font-size: 1rem;
@@ -82,9 +95,9 @@
         background-color: #2980b9;
     }
 
-    /* Content Styles */
-    .page-content {
-        padding: 20px;
-        flex: 1;
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
     }
 </style>

@@ -35,6 +35,6 @@
             </div>
         </main>
     </div>
-
+<script src="/2A27/view/assets/js/dashboard.js"></script>
 </body>
 </html>

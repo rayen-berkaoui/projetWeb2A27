@@ -1,4 +1,33 @@
-<?php $active_menu = 'articles'; include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
+<?php
+// Database connection
+$host = 'localhost'; 
+$dbname = 'db_html'; 
+$username = 'root'; 
+$password = '';
+
+try {
+    // Create PDO instance
+    $db = new PDO('mysql:host=' . $host . ';dbname=' . $dbname, $username, $password);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die('Database connection failed: ' . $e->getMessage());
+}
+// Include necessary files
+require_once 'C:\xampp\htdocs\2A27\src\controll\routes\admin\ArticleController.php';
+
+
+
+// Now instantiate the controller and pass the $db object
+$controller = new ArticleController($db);
+
+// Call the getArticles method or any other methods you want
+$articles = $controller->getArticles();
+
+// Include the sidebar or other parts of the page
+include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php';
+?>
+
+<!-- HTML for Articles Table (continue with the rest of the page) -->
 
 <!DOCTYPE html>
 <html lang="en">
@@ -111,36 +140,48 @@
 
     <!-- Content Area -->
     <div class="content-area">
-        <h2>All Articles</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Type</th>
-                    <th>Author</th>
-                    <th>Content</th>
-                    <th>Created</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($articles as $article): ?>
+        <h2 style="display: flex; justify-content: space-between; align-items: center;">
+            <span>All Articles</span>
+            <span>
+                <a href="/2A27/src/controll/process/export_articles_pdf.php" class="btn btn-primary" target="_blank">Export to PDF</a>
+                <a href="/2A27/view/admin/pages/articles/articlestat.php" class="btn btn-primary" style="margin-left: 10px;">View Stats</a>
+            </span>
+        </h2>
+        
+        <!-- Check if articles are available -->
+        <?php if (isset($articles) && !empty($articles)): ?>
+            <table class="table">
+                <thead>
                     <tr>
-                        <!-- Displaying the ID -->
-                        <td><?= htmlspecialchars($article['id']) ?></td>
-                        <td><?= htmlspecialchars($article['type']) ?></td>
-                        <td><?= htmlspecialchars($article['author']) ?></td>
-                        <!-- Displaying content or a snippet -->
-                        <td><?= htmlspecialchars(substr($article['content'], 0, 50)) ?>...</td>
-                        <td><?= htmlspecialchars($article['time_created']) ?></td>
-                        <td class="actions">
-                            <a href="/2A27/admin/articles/edit/<?= $article['id'] ?>" class="btn btn-primary">Edit</a> |
-                            <a href="/2A27/admin/articles/delete/<?= $article['id'] ?>" class="btn btn-danger">Delete</a>
-                        </td>
+                        <th>ID</th>
+                        <th>Author</th>
+                        <th>Content</th>
+                        <th>Created</th>
+                        <th>Actions</th>
                     </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    <!-- Loop through articles -->
+                    <?php foreach ($articles as $article): ?>
+                        <tr>
+                            <!-- Displaying the ID -->
+                            <td><?= htmlspecialchars($article['id']) ?></td>
+                            <td><?= htmlspecialchars($article['author']) ?></td>
+                            <!-- Displaying content or a snippet -->
+                            <td><?= htmlspecialchars(substr($article['content'], 0, 50)) ?>...</td>
+                            <td><?= htmlspecialchars($article['time_created']) ?></td>
+                            <td class="actions">
+                                <a href="/2A27/admin/articles/edit/<?= $article['id'] ?>" class="btn btn-primary">Edit</a> |
+                                <a href="/2A27/admin/articles/delete/<?= $article['id'] ?>" class="btn btn-danger">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        <?php else: ?>
+            <!-- Display message if no articles are found -->
+            <p>No articles found.</p>
+        <?php endif; ?>
     </div>
 
 </body>

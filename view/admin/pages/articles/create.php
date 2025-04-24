@@ -106,13 +106,20 @@
     <?php include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
 
     <!-- Content Area -->
+    <?php include_once 'C:\xampp\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
+
     <div class="content-area">
         <h2>Create New Article</h2>
 
         <form method="POST" action="/2A27/admin/articles/create">
             <div class="form-group">
-                <label for="type">Type</label>
-                <input type="text" name="type" id="type" class="form-input" required placeholder="Enter article type">
+                <label for="type_id">Type</label>
+                <select name="type_id" id="type_id" class="form-input" required>
+                    <option value="">-- Choisir un type --</option>
+                    <?php foreach ($types as $type): ?>
+                        <option value="<?= $type['id'] ?>"><?= htmlspecialchars($type['nom']) ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
             <div class="form-group">
