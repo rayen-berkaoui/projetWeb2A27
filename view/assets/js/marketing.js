@@ -243,37 +243,28 @@ function closeCampaignDetails() {
 }
 
 // Partner Management Functions
-function showAddPartnerModal() {
+function showAddPartnerModal(isEdit = false) {
     const modal = document.getElementById('partnerModal');
     const form = document.getElementById('partnerForm');
-    const campaignIdInput = document.getElementById('campaign_id');
     
-    if (!currentCampaign) {
-        console.error('No campaign selected');
-        return;
+    if (!isEdit) {
+        // Only reset form if not editing
+        form.reset();
+        form.action = '/2A27/view/admin/pages/add_partner.php';
+        document.querySelector('#partnerModal h2').textContent = 'Add New Partner';
+        form.querySelector('button[type="submit"]').textContent = 'Add Partner';
     }
     
-    campaignIdInput.value = currentCampaign.id;
-    
-    form.reset();
-    resetValidationStyles(form);
+    // Always ensure campaign_id is set
+    if (currentCampaign) {
+        document.getElementById('campaign_id').value = currentCampaign.id;
+    }
     
     modal.classList.add('show');
     requestAnimationFrame(() => {
         const modalContent = modal.querySelector('.modal-content');
         modalContent.style.transform = 'scale(1)';
         modalContent.style.opacity = '1';
-        
-        const formGroups = modalContent.querySelectorAll('.form-group');
-        formGroups.forEach((group, index) => {
-            group.style.opacity = '0';
-            group.style.transform = 'translateY(10px)';
-            setTimeout(() => {
-                group.style.transition = 'all 0.3s ease';
-                group.style.opacity = '1';
-                group.style.transform = 'translateY(0)';
-            }, index * 50);
-        });
     });
 }
 
@@ -343,27 +334,27 @@ function editPartner(partnerId) {
         .then(partner => {
             const form = document.getElementById('partnerForm');
             
-            // Fill form fields
+            // Fill form fields with existing data
             form.querySelector('input[name="id"]').value = partner.id;
-            form.querySelector('input[name="campaign_id"]').value = currentCampaign.id; // Add this line
-            form.querySelector('input[name="nom_entreprise"]').value = partner.nom_entreprise;
-            form.querySelector('input[name="email"]').value = partner.email;
-            form.querySelector('input[name="telephone"]').value = partner.telephone;
-            form.querySelector('input[name="adresse"]').value = partner.adresse;
+            form.querySelector('input[name="campaign_id"]').value = currentCampaign.id;
+            form.querySelector('input[name="nom_entreprise"]').value = partner.nom_entreprise || '';
+            form.querySelector('input[name="email"]').value = partner.email || '';
+            form.querySelector('input[name="telephone"]').value = partner.telephone || '';
+            form.querySelector('input[name="adresse"]').value = partner.adresse || '';
             form.querySelector('textarea[name="description"]').value = partner.description || '';
-            form.querySelector('select[name="statut"]').value = partner.statut;
+            form.querySelector('select[name="statut"]').value = partner.statut || 'active';
             
             // Update form for edit mode
             form.action = '/2A27/view/admin/pages/update_partner.php';
             document.querySelector('#partnerModal h2').textContent = 'Edit Partner';
             form.querySelector('button[type="submit"]').textContent = 'Update Partner';
             
-            // Show modal
-            showAddPartnerModal();
+            // Show modal with existing data
+            showAddPartnerModal(true);
         })
         .catch(error => {
             console.error('Error:', error);
-            alert('Error loading partner details');
+            alert('Error loading partner details: ' + error.message);
         });
 }
 
@@ -395,17 +386,20 @@ function validatePartnerForm(event) {
     
     const form = event.target;
     const formData = new FormData(form);
-    const isEdit = form.querySelector('input[name="id"]').value !== '';
-
-    // Set default status if not selected
-    if (!formData.get('statut')) {
-        formData.set('statut', 'active');
-    }
     
-    // Ensure campaign_id is set
-    if (currentCampaign && currentCampaign.id) {
-        formData.set('campaign_id', currentCampaign.id);
-    }
+    // Validate required fields
+    const required = ['nom_entreprise', 'email', 'telephone', 'adresse'];
+    let isValid = true;
+    
+    required.forEach(field => {
+        const input = form.querySelector(`[name="${field}"]`);
+        if (!formData.get(field)) {
+            isValid = false;
+            showErrorMessage(input, 'This field is required');
+        }
+    });
+    
+    if (!isValid) return;
     
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
@@ -415,25 +409,32 @@ function validatePartnerForm(event) {
         method: 'POST',
         body: formData
     })
-    .then(response => response.text())
-    .then(result => {
-        if (result.trim() === 'success') {
-            closePartnerModal();
-            if (currentCampaign) {
-                loadCampaignPartners(currentCampaign.id);
+    .then(response => {
+        // Try to parse as JSON, fall back to text if fails
+        return response.text().then(text => {
+            try {
+                return JSON.parse(text);
+            } catch (e) {
+                throw new Error('Server response: ' + text);
             }
-            alert(isEdit ? 'Partner updated successfully' : 'Partner added successfully');
+        });
+    })
+    .then(data => {
+        if (data.success) {
+            alert(data.message);
+            closePartnerModal();
+            location.reload();
         } else {
-            throw new Error('Failed to save partner');
+            throw new Error(data.message || 'Failed to add partner');
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error saving partner: ' + error.message);
+        alert('Error adding partner: ' + error.message);
     })
     .finally(() => {
         submitBtn.disabled = false;
-        submitBtn.textContent = isEdit ? 'Update Partner' : 'Add Partner';
+        submitBtn.textContent = 'Add Partner';
     });
 }
 
