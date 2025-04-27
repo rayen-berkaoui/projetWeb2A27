@@ -202,3 +202,95 @@ section:hover {
     color: #7f8c8d;
     font-style: italic;
 }
+.pagination {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination a {
+    display: inline-block;
+    margin: 0 5px;
+    padding: 6px 12px;
+    background-color: #eee;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.pagination a:hover {
+    background-color: #ccc;
+}
+
+.pagination .current-page {
+    background-color: #3498db;
+    color: white;
+    font-weight: bold;
+    pointer-events: none;
+}
+/* Filter Dropdown - Modern Look */
+#articles form {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    align-items: center;
+}
+
+#articles form label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #34495e;
+    margin-right: 10px;
+}
+
+/* Custom Select Dropdown */
+#articles form select {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 8px;
+    background-color: #3498db;
+    color: white;
+    cursor: pointer;
+    width: 200px;
+    transition: background-color 0.3s, transform 0.2s ease-in-out;
+    appearance: none;  /* Remove default dropdown arrow */
+    position: relative;
+}
+
+/* Custom arrow for the select dropdown */
+#articles form select::after {
+    content: " ▼";
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 12px;
+}
+
+/* Hover and focus effects */
+#articles form select:hover {
+    background-color: #2980b9;
+}
+
+#articles form select:focus {
+    background-color: #1abc9c;
+    outline: none;
+}
+
+/* Select Dropdown wrapper to handle custom styles */
+#articles form select:focus::after {
+    color: white;
+}
+
+/* Adding a subtle box shadow on hover */
+#articles form select:hover {
+    transform: scale(1.05);
+}
+
+/* Adding a transition effect */
+#articles form select {
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}

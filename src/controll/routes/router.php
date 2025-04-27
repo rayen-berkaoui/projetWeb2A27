@@ -1,16 +1,11 @@
 <?php
 
 require_once __DIR__ . '/admin/ArticleController.php';
+require __DIR__ . '/../process/db.php';
 
-// Database connection
-$db = new mysqli('localhost', 'root', '', 'db_html');
-if ($db->connect_error) {
-    die("Connection failed: " . $db->connect_error);
-}
 
 // Instantiate controllers
 $articleController = new ArticleController($db);
-
 // Base path & URI
 $basePath = '/2A27';
 $requestUri = $_SERVER['REQUEST_URI'];
@@ -24,6 +19,10 @@ $cleanPath = str_replace($basePath, '', $requestUri);
 if ($cleanPath === '') {
     $cleanPath = '/';
 }
+
+// Fix: remove query string from cleanPath
+$cleanPath = parse_url($cleanPath, PHP_URL_PATH);
+
 
 // Routing
 switch ($cleanPath) {
@@ -80,6 +79,30 @@ switch ($cleanPath) {
 
     case '/admin/articles':
         $articleController->index();
+        break;
+    case '/admin/articles/listTypes':
+         // Ensure you have a method in your controller that handles this
+        $articleController->listTypes(); 
+        break;
+    case '/admin/articles/createType':
+        $articleController->createType();
+        break;
+
+    case (preg_match('/^\/admin\/articles\/editType\/(\d+)$/', $cleanPath, $matches) ? true : false):
+        $articleController->editType($matches[1]); // Pass the ID to the editType method
+        break;
+    
+    case (preg_match('/^\/admin\/articles\/deleteType\/(\d+)$/', $cleanPath, $matches) ? true : false):
+        $articleController->deleteType($matches[1]); // Pass the ID to the deleteType method
+        break;    
+
+    case (preg_match('/^\/admin\/articles\/updateType\/(\d+)$/', $cleanPath, $matches) ? true : false):
+        $articleController->updateType($matches[1]);
+        break;
+            
+
+    case '/admin/export_articles_pdf':
+        require_once __DIR__ . '../process/export_articles_pdf.php';
         break;
 
     case '/admin/articles/create':

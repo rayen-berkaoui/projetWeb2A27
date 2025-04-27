@@ -111,12 +111,13 @@
 
     <!-- Content Area -->
     <div class="content-area">
-        <h2>All Articles</h2>
+        <h2>All Articles
+        <a href="/2A27/src/controll/process/export_articles_pdf.php" class="btn btn-primary" style="margin-bottom: 20px;" target="_blank">Export to PDF</a>
+        </h2>
         <table class="table">
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>Type</th>
                     <th>Author</th>
                     <th>Content</th>
                     <th>Created</th>
@@ -128,7 +129,6 @@
                     <tr>
                         <!-- Displaying the ID -->
                         <td><?= htmlspecialchars($article['id']) ?></td>
-                        <td><?= htmlspecialchars($article['type']) ?></td>
                         <td><?= htmlspecialchars($article['author']) ?></td>
                         <!-- Displaying content or a snippet -->
                         <td><?= htmlspecialchars(substr($article['content'], 0, 50)) ?>...</td>
