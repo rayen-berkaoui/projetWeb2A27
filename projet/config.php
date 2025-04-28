@@ -1,18 +1,27 @@
 <?php
-class config {
-public static function getConnexion() {
-$host = "localhost";
-$dbname = "projetweb2a";
-$username = "root";
-$password = "";
+class Config {
+    private static $host = "localhost";
+    private static $dbname = "projetweb2a";
+    private static $username = "root";
+    private static $password = "";
+    private static $conn = null;
 
-try {
-$conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8", $username, $password);
-$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-return $conn;
-} catch (PDOException $e) {
-die('Erreur : ' . $e->getMessage());
-}
-}
+    // Private constructor to prevent direct object creation
+    private function __construct() {}
+
+    // Method to get the database connection
+    public static function getConnexion() {
+        // Check if the connection already exists
+        if (self::$conn === null) {
+            try {
+                // Establish a new connection if not already established
+                self::$conn = new PDO("mysql:host=" . self::$host . ";dbname=" . self::$dbname . ";charset=utf8", self::$username, self::$password);
+                self::$conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            } catch (PDOException $e) {
+                die('Connection failed: ' . $e->getMessage());
+            }
+        }
+        return self::$conn;
+    }
 }
 ?>

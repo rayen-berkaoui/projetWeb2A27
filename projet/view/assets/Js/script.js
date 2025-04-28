@@ -11,7 +11,6 @@ document.getElementById('forgot-password-form')?.addEventListener('submit', func
     }
 });
 
-// Function to handle form submission for Verification Code
 document.getElementById('verification-form')?.addEventListener('submit', function(event) {
     event.preventDefault();
     const code = document.getElementById('code').value;
@@ -22,7 +21,6 @@ document.getElementById('verification-form')?.addEventListener('submit', functio
     }
 });
 
-// Function to handle form submission for New Password
 document.getElementById('new-password-form')?.addEventListener('submit', function(event) {
     event.preventDefault();
     const password = document.getElementById('password').value;
@@ -34,7 +32,6 @@ document.getElementById('new-password-form')?.addEventListener('submit', functio
     }
 });
 
-// Function to redirect to Login page from Password Changed page
 document.getElementById('login-now-btn')?.addEventListener('click', function() {
     window.location.href = 'sign-in.html'; // Redirect to the Sign-In page
 });

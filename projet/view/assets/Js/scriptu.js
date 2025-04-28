@@ -10,16 +10,15 @@ document.querySelectorAll('.btn-modifier, .btn-supprimer, .btn-ajouter').forEach
     });
 });
 
-// Confirmation de suppression (facultatif)
 document.querySelectorAll('.btn-supprimer').forEach(button => {
     button.addEventListener('click', function(e) {
         const confirmDelete = confirm("Êtes-vous sûr de vouloir supprimer cet utilisateur ?");
         if (!confirmDelete) {
-            e.preventDefault(); // Empêche la suppression si l'utilisateur annule
+            e.preventDefault(); 
         }
     });
 });
-// Tu peux ajouter des animations ici si tu veux, par exemple :
+
 document.querySelectorAll(".btn-action").forEach(btn => {
     btn.addEventListener("mouseover", () => {
       btn.style.boxShadow = "0 4px 10px rgba(0,0,0,0.2)";

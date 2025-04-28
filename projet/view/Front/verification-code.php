@@ -1,49 +1,62 @@
 <?php
-session_start();
+session_start(); // Toujours au début
 
-// Récupérer le code de vérification envoyé par email
-$sentCode = $_SESSION['verification_code'] ?? '';
-
-// Message d'erreur
 $message = "";
 
+// Vérification du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $enteredCode = $_POST['code'] ?? '';
+    if (!empty($_POST['code'])) {
+        $enteredCode = trim($_POST['code']);
+        $correctCode = isset($_SESSION['verification_code']) ? (string)$_SESSION['verification_code'] : null; // 👈 convertir en string
 
-    if ($enteredCode === $sentCode) {
-        // Code vérifié avec succès, rediriger vers la page de réinitialisation du mot de passe
-        header("Location: reset-password.php?email=" . urlencode($_GET['email']));
-        exit();
+        if ($correctCode && $enteredCode === $correctCode) {
+            // ✅ Code correct → aller à la page de nouveau mot de passe
+            header('Location: new-password.php');
+            exit;
+        } else {
+            // ❌ Code incorrect
+            $message = "❌ Code de vérification incorrect.";
+        }
     } else {
-        $message = "The verification code is incorrect. Please try again.";
+        $message = "Veuillez entrer le code de vérification.";
     }
 }
 ?>
 
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../assets/css/styles.css">
-    <script src="../assets/js/script.js" defer></script>
-    <title>Verification Code</title>
+    <title>Vérification du Code</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container { max-width: 400px; margin: 50px auto; padding: 20px; background: #fff; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center; }
+        .error-message { color: red; margin-top: 10px; margin-bottom: 15px; font-weight: 500; }
+        input[type="text"] { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; }
+        button { width: 100%; padding: 10px; background: #4CAF50; color: white; border: none; border-radius: 5px; font-weight: bold; }
+        button:hover { background: #45a049; }
+        a { color: #4CAF50; font-weight: bold; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h2>Verification Code</h2>
-        <p>We’ve sent you a verification code to your email </p>
+<div class="container">
+    <h2>Vérification du Code</h2>
+    <p>Un code a été envoyé à votre email 📧</p>
 
-        <?php if (!empty($message)) echo "<p style='color:red;'>$message</p>"; ?>
+    <form method="POST">
+        <label for="code">Entrez le code :</label>
+        <input type="text" name="code" id="code" placeholder="Code de vérification">
+        
+        <?php if (!empty($message)): ?>
+            <div class="error-message"><?php echo htmlspecialchars($message); ?></div>
+        <?php endif; ?>
 
-        <form id="verification-form" method="POST">
-            <label for="code">Enter Verification Code</label>
-            <input type="text" id="code" name="code" placeholder="Verification Code" required>
-            <button type="submit">Submit</button>
-        </form>
+        <button type="submit">Valider</button>
+    </form>
 
-        <!-- Option to resend the verification code -->
-        <p>If you didn't receive the code, <a href="forgotpassword.php">click here to resend it</a>.</p>
-    </div>
+    <p>Pas reçu ? <a href="forgotpassword.php">Renvoyer le code</a></p>
+</div>
 </body>
 </html>

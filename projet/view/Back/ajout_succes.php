@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insérer les données dans la base de données
             try {
                 $stmt = $conn->prepare("INSERT INTO utilisateurs (username, email, numero, mdp, role) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute([$username, $email, $numero, $mdp, $role]);
+                $stmt->execute(params: [$username, $email, $numero, $mdp, $role]);
 
                 // Rediriger vers la page avec le message de succès
                 header("Location: ajout_succes.php?ajout=success");
@@ -46,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/styleb.css" />
     <link rel="stylesheet" href="../assets/css/styless.css" />
   <script src="../assets/js/scripts.js"></script>
+  
 </head>
 <body>
     <!-- Barre latérale -->

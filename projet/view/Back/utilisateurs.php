@@ -11,8 +11,12 @@ if (isset($_POST['delete'])) {
     exit();
 }
 
-// Récupération des utilisateurs
-$query = $conn->query("SELECT * FROM utilisateurs");
+// Récupération des utilisateurs avec nom du rôle via jointure
+$query = $conn->query("
+    SELECT u.*, r.name AS nom_role
+    FROM utilisateurs u
+    LEFT JOIN role r ON u.role = r.id
+");
 $utilisateurs = $query->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
@@ -22,33 +26,32 @@ $utilisateurs = $query->fetchAll(PDO::FETCH_ASSOC);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liste des Utilisateurs</title>
-
   <link rel="stylesheet" href="../assets/css/styleb.css" />
   <link rel="stylesheet" href="../assets/css/stylesu.css" />
   <script src="../assets/js/scriptu.js" defer></script>
 </head>
-
 <body>
-  <!-- Barre latérale -->
   <?php include('sidebar.php'); ?>
 
   <div class="main-content">
     <h1 class="title">Liste des Utilisateurs</h1>
 
-    <!-- Bouton Ajouter un Utilisateur -->
     <div class="user-actions">
-      <div class="left-buttons">
-        <a href="formulaireaj.php"><button class="btn-ajouter">➕ Ajouter un Utilisateur</button></a>
-      </div>
-    </div>
+  <div class="left-buttons">
+    <a href="formulaireaj.php"><button class="btn-ajouter">➕ Ajouter un Utilisateur</button></a>
+    <!-- Export Button -->
+    <a href="export_pdf.php" target="_blank"><button class="btn-ajouter btn-export">📄 Exporter en PDF</button></a>
+  </div>
+</div>
 
-    <!-- Tableau des utilisateurs -->
+
     <div class="table-container">
       <table class="user-table">
         <thead>
           <tr>
             <th>ID</th>
             <th>Nom d'utilisateur</th>
+            <th>Mot de passe</th>
             <th>Rôle</th>
             <th>Email</th>
             <th>Numéro</th>
@@ -56,29 +59,28 @@ $utilisateurs = $query->fetchAll(PDO::FETCH_ASSOC);
           </tr>
         </thead>
         <tbody>
-          <?php foreach ($utilisateurs as $row) { ?>
+          <?php foreach ($utilisateurs as $row): ?>
             <tr>
-              <td><?php echo $row['id_user']; ?></td>
-              <td><?php echo $row['username']; ?></td>
-              <td><?php echo $row['role']; ?></td>
-              <td><?php echo $row['email']; ?></td>
-              <td><?php echo $row['numero']; ?></td>
+              <td><?= $row['id_user']; ?></td>
+              <td><?= htmlspecialchars($row['username']); ?></td>
+              <td><?= htmlspecialchars($row['mdp']); ?></td>
+              <td><?= $row['nom_role'] ?? $row['role']; ?></td>
+              <td><?= htmlspecialchars($row['email']); ?></td>
+              <td><?= htmlspecialchars($row['numero']); ?></td>
               <td>
                 <div class="right-buttons">
-                  <!-- Bouton Supprimer -->
                   <form action="" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
-                    <input type="hidden" name="id_user" value="<?php echo $row['id_user']; ?>" />
+                    <input type="hidden" name="id_user" value="<?= $row['id_user']; ?>" />
                     <button type="submit" name="delete" class="btn-supprimer">🗑️ Supprimer</button>
                   </form>
-
-                  <!-- Bouton Modifier -->
-                  <a href="modifier.php?id_user=<?php echo $row['id_user']; ?>">
+                  <a href="modifier.php?id_user=<?= $row['id_user']; ?>">
                     <button class="btn-modifier">✏️ Modifier</button>
                   </a>
                 </div>
               </td>
             </tr>
-          <?php } ?>
+            
+          <?php endforeach; ?>
         </tbody>
       </table>
     </div>

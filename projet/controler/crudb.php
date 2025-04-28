@@ -2,6 +2,15 @@
 require_once('../../config.php');
 $conn = config::getConnexion();
 
+// Fonction pour récupérer l'ID du rôle à partir de son nom
+function getRoleIdByName($roleName) {
+    global $conn;
+    $stmt = $conn->prepare("SELECT id FROM role WHERE name = :name");
+    $stmt->execute(['name' => $roleName]);
+    $role = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $role ? $role['id'] : null;
+}
+
 // Vérifie si email ou numéro existe déjà
 function isDuplicate($email, $numero) {
     global $conn;
@@ -13,18 +22,24 @@ function isDuplicate($email, $numero) {
 // AJOUTER
 if (isset($_POST['ajouter'])) {
     $username = $_POST['username'];
-    $role = $_POST['role'];
     $email = $_POST['email'];
     $numero = $_POST['numero'];
     $mdp = $_POST['mdp'];
-    
+    $roleName = $_POST['role'];
+
+    $roleId = getRoleIdByName($roleName);
+
+    if ($roleId === null) {
+        echo "<script>alert('Rôle invalide.'); window.history.back();</script>";
+        exit;
+    }
 
     if (!isDuplicate($email, $numero)) {
         $stmt = $conn->prepare("INSERT INTO utilisateurs (username, role, email, numero, mdp) 
                                 VALUES (:username, :role, :email, :numero, :mdp)");
         $stmt->execute([
             'username' => $username,
-            'role' => $role,
+            'role' => $roleId,
             'email' => $email,
             'numero' => $numero,
             'mdp' => $mdp
@@ -39,16 +54,25 @@ if (isset($_POST['ajouter'])) {
 if (isset($_POST['modifier'])) {
     $id = $_POST['id_user'];
     $username = $_POST['username'];
-    $role = $_POST['role'];
     $email = $_POST['email'];
     $numero = $_POST['numero'];
     $mdp = $_POST['mdp'];
+    $roleName = $_POST['role'];
 
-    $stmt = $conn->prepare("UPDATE utilisateurs SET username = :username, role = :role, status = :status, email = :email, numero = :numero, mdp = :mdp WHERE id_user = :id");
+    $roleId = getRoleIdByName($roleName);
+
+    if ($roleId === null) {
+        echo "<script>alert('Rôle invalide.'); window.history.back();</script>";
+        exit;
+    }
+
+    $stmt = $conn->prepare("UPDATE utilisateurs 
+                            SET username = :username, role = :role, email = :email, numero = :numero, mdp = :mdp 
+                            WHERE id_user = :id");
     $stmt->execute([
         'id' => $id,
         'username' => $username,
-        'role' => $role,
+        'role' => $roleId,
         'email' => $email,
         'numero' => $numero,
         'mdp' => $mdp
@@ -64,53 +88,3 @@ if (isset($_POST['delete'])) {
     header("Location: utilisateurs.php");
 }
 ?>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('form-ajouter-modifier');
-    if (!form) return;
-
-    form.addEventListener('submit', function (e) {
-        const username = document.getElementById('username').value.trim();
-        const numero = document.getElementById('numero').value.trim();
-        const mdp = document.getElementById('mdp').value.trim();
-        const email = document.getElementById('email').value.trim();
-        const role = document.getElementById('role').value;
-
-        const emailValid = /^[^@.]+@[^@.]+\.[^@.]+$/.test(email);
-        const mdpValid = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6}$/.test(mdp);
-        const numeroValid = /^\d{8}$/.test(numero);
-
-        if (username.length > 15) {
-            alert("Le nom d'utilisateur ne doit pas dépasser 15 caractères.");
-            e.preventDefault();
-            return;
-        }
-
-        if (!numeroValid) {
-            alert("Le numéro doit contenir exactement 8 chiffres.");
-            e.preventDefault();
-            return;
-        }
-
-        if (!mdpValid) {
-            alert("Le mot de passe doit contenir 6 caractères, avec une majuscule, une minuscule et un chiffre.");
-            e.preventDefault();
-            return;
-        }
-
-        if (!emailValid || (email.match(/@/g) || []).length !== 1 || (email.match(/\./g) || []).length !== 1) {
-            alert("Email invalide. Il doit contenir exactement un '@' et un seul '.'");
-            e.preventDefault();
-            return;
-        }
-
-        if (!(role === "utilisateur" || role === "organisateur")) {
-            alert("Le rôle doit être 'utilisateur' ou 'organisateur'.");
-            e.preventDefault();
-            return;
-        }
-
-    });
-});
-</script>

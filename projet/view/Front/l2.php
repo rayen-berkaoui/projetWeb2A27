@@ -1,57 +1,62 @@
 <?php
-// Include necessary files for database connection or validation (if needed)
+session_start();
+
 require_once('../../model/user.php');
 require_once('../../controler/userc.php');
-$message = "";
+
+$message_signup = "";
+$message_signin = "";
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle Sign Up form submission
-    if (isset($_POST['sign_up'])) {
-        $username = $_POST['username'];
-        $email = $_POST['email'];
-        $password = $_POST['password'];
-        $confirmPassword = $_POST['confirm_password'];
+    $controller = new UserController();
 
-        // Check if passwords match
-        if ($password !== $confirmPassword) {
-            $message = "Passwords do not match!";
+    // SIGN UP
+    if (isset($_POST['sign_up'])) {
+        $username = trim($_POST['username']);
+        $email = trim($_POST['email']);
+        $mdp = trim($_POST['password']);
+        $role = "organisateur";
+        $numero = "00000000";
+
+        if (!empty($username) && !empty($email) && !empty($mdp)) {
+            $user = new User($username, email: $email , mdp: $mdp , role: $role , numero: $numero );
+            $result = $controller->addUser($user);
+            $message_signup = $result ? "✅ Utilisateur enregistré avec succès!" : "❌ Erreur lors de l'enregistrement. Veuillez réessayer.";
         } else {
-            // Create a UserController instance to add the user to the database
-            $controller = new UserController();
-            $user = new User($username, $email, $password);
-            $controller->addUser($user);
-            $message = "User successfully registered!";
+            $message_signup = "❌ Tous les champs doivent être remplis.";
         }
     }
 
-    // Handle Sign In form submission
+    // SIGN IN
     if (isset($_POST['sign_in'])) {
-        $username = $_POST['username'];
-        $password = $_POST['password'];
+        $username = trim($_POST['username']);
+        $mdp = trim($_POST['password']); // Corrected variable name
 
-        // Validate user credentials
-        $controller = new UserController();
-        $user = $controller->verifyCredentials($username, $password);
+        $user = $controller->verifyCredentials($username, $mdp); 
+
         if ($user) {
-            $message = "Welcome back, " . $user->getUsername() . "!";
-            // Redirect or start the session here
-            // header("Location: dashboard.php"); // example
+            $_SESSION['user'] = [
+                'username' => $user->getUsername(),
+                'email' => $user->getEmail(),
+                'role' => $user->getRole(),
+                'numero' => $user->getNumero()
+            ];
+            header("Location: profile.php");
             exit();
         } else {
-            $message = "Invalid credentials!";
+            $message_signin = "❌ Identifiants invalides!";
         }
     }
 }
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Authentication</title>
+  <title>Authentification</title>
   <link rel="stylesheet" href="../assets/css/l2.css" />
-
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 </head>
 <body>
@@ -64,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="">
               <div class="input-group">
                 <i class="bx bxs-user"></i>
-                <input type="text" name="username" placeholder="Username" required />
+                <input type="text" name="username" placeholder="Nom d'utilisateur" required />
               </div>
               <div class="input-group">
                 <i class="bx bx-mail-send"></i>
@@ -72,18 +77,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               </div>
               <div class="input-group">
                 <i class="bx bxs-lock-alt"></i>
-                <input type="password" name="password" placeholder="Password" required />
+                <input type="password" name="password" placeholder="Mot de passe" required />
               </div>
-              <div class="input-group">
-                <i class="bx bxs-lock-alt"></i>
-                <input type="password" name="confirm_password" placeholder="Confirm Password" required />
-              </div>
-              <button type="submit" name="sign_up">Sign up</button>
+              <button type="submit" name="sign_up">S'inscrire</button>
             </form>
-            <?php if ($message) echo "<p style='color:red;'>$message</p>"; ?>
+            <div id="message-signup" class="message"></div>
             <p>
-              <span>Already have an account?</span>
-              <b onclick="toggle()" class="pointer">Sign in here</b>
+              <span>Vous avez déjà un compte ?</span>
+              <b onclick="toggle()" class="pointer">Se connecter ici</b>
             </p>
           </div>
         </div>
@@ -96,44 +97,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="">
               <div class="input-group">
                 <i class="bx bxs-user"></i>
-                <input type="text" name="username" placeholder="Username" required />
+                <input type="text" name="username" placeholder="Nom d'utilisateur" required />
               </div>
               <div class="input-group">
                 <i class="bx bxs-lock-alt"></i>
-                <input type="password" name="password" placeholder="Password" required />
+                <input type="password" name="password" placeholder="Mot de passe" required />
               </div>
-              <button type="submit" name="sign_in">Sign in</button>
+              <button type="submit" name="sign_in">Se connecter</button>
             </form>
-            <?php if ($message) echo "<p style='color:red;'>$message</p>"; ?>
-            <!-- Forgot Password Link -->
-            <p><a href="forgotpassword.php" style="color: black; text-decoration: none;"><b>Forgot password?</b></a></p>
-
+            <div id="message-signin" class="message"></div>
+            <p><a href="forgotpassword.php" style="color: black; text-decoration: none;"><b>Mot de passe oublié ?</b></a></p>
             <p>
-              <span>Don't have an account?</span>
-              <b onclick="toggle()" class="pointer">Sign up here</b>
+              <span>Vous n'avez pas de compte ?</span>
+              <b onclick="toggle()" class="pointer">S'inscrire ici</b>
             </p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- CONTENT SECTION -->
     <div class="row content-row">
       <div class="col align-items-center flex-col">
         <div class="text sign-in">
-          <h2>Welcome</h2>
+          <h2>Bienvenue</h2>
         </div>
-        <div class="img sign-in">
-          <!-- Image can go here -->
-        </div>
+        <div class="img sign-in"></div>
       </div>
 
       <div class="col align-items-center flex-col">
-        <div class="img sign-up">
-          <!-- Image can go here -->
-        </div>
+        <div class="img sign-up"></div>
         <div class="text sign-up">
-          <h2>Join with us</h2>
+          <h2>Rejoignez-nous</h2>
         </div>
       </div>
     </div>
@@ -141,15 +135,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <script src="../assets/js/l2.js"></script>
   <script>
-    document.getElementById('user-btn').addEventListener('click', function() {
-      document.getElementById('organizer-btn').classList.remove('active');
-      document.querySelector('.organization-input-container').style.display = 'none';
+    window.addEventListener('load', () => {
+      const container = document.getElementById("container");
+      container.classList.add('sign-in');
+      setTimeout(() => container.classList.add('start-animation'), 100);
+
+      const messageSignup = "<?php echo $message_signup; ?>";
+      const messageSignin = "<?php echo $message_signin; ?>";
+
+      if (messageSignup) {
+        document.getElementById("message-signup").textContent = messageSignup;
+        document.getElementById("message-signup").style.color = 'red';
+      }
+
+      if (messageSignin) {
+        document.getElementById("message-signin").textContent = messageSignin;
+        document.getElementById("message-signin").style.color = 'red';
+      }
     });
 
-    document.getElementById('organizer-btn').addEventListener('click', function() {
-      this.classList.add('active');
-      document.querySelector('.organization-input-container').style.display = 'block';
-    });
+    function toggle() {
+      const container = document.getElementById('container');
+      container.classList.toggle('sign-in');
+      container.classList.toggle('sign-up');
+    }
   </script>
 </body>
 </html>

@@ -17,7 +17,7 @@ $passwordUpdated = isset($_GET['success']) && $_GET['success'] == 'true';
             <div class="col align-items-center flex-col">
                 <div class="text">
                     <h2>Your password has been changed</h2>
-                    <p>Now you can log in with your new password </p>
+                    <p>Now you can log in with your new password :)</p>
                 </div>
                 <a href="l2.php">
                     <button>Login Now</button>
