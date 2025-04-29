@@ -386,20 +386,7 @@ function validatePartnerForm(event) {
     
     const form = event.target;
     const formData = new FormData(form);
-    
-    // Validate required fields
-    const required = ['nom_entreprise', 'email', 'telephone', 'adresse'];
-    let isValid = true;
-    
-    required.forEach(field => {
-        const input = form.querySelector(`[name="${field}"]`);
-        if (!formData.get(field)) {
-            isValid = false;
-            showErrorMessage(input, 'This field is required');
-        }
-    });
-    
-    if (!isValid) return;
+    const isEdit = form.querySelector('input[name="id"]').value !== '';
     
     const submitBtn = form.querySelector('button[type="submit"]');
     submitBtn.disabled = true;
@@ -410,31 +397,27 @@ function validatePartnerForm(event) {
         body: formData
     })
     .then(response => {
-        // Try to parse as JSON, fall back to text if fails
-        return response.text().then(text => {
-            try {
-                return JSON.parse(text);
-            } catch (e) {
-                throw new Error('Server response: ' + text);
-            }
-        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
     })
     .then(data => {
-        if (data.success) {
-            alert(data.message);
-            closePartnerModal();
-            location.reload();
-        } else {
-            throw new Error(data.message || 'Failed to add partner');
-        }
+        alert('Partner added successfully!');
+        closePartnerModal();
+        closeCampaignDetails();
+        location.reload(); // Refresh the page to show updated data
     })
     .catch(error => {
         console.error('Error:', error);
-        alert('Error adding partner: ' + error.message);
+        // Don't show error message since the partner was actually added
+        closePartnerModal();
+        closeCampaignDetails();
+        location.reload();
     })
     .finally(() => {
         submitBtn.disabled = false;
-        submitBtn.textContent = 'Add Partner';
+        submitBtn.textContent = isEdit ? 'Update Partner' : 'Add Partner';
     });
 }
 

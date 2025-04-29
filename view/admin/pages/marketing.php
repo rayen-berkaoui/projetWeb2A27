@@ -154,19 +154,19 @@ ob_start();
             <input type="hidden" name="id">
             <input type="hidden" name="campaign_id" id="campaign_id">
             <div class="form-group">
-                <input type="text" name="nom_entreprise" placeholder=" " required>
+                <input type="text" name="nom_entreprise" placeholder=" " >
                 <label>Company Name</label>
             </div>
             <div class="form-group">
-                <input type="email" name="email" placeholder=" " required>
+                <input type="email" name="email" placeholder=" " >
                 <label>Email</label>
             </div>
             <div class="form-group">
-                <input type="tel" name="telephone" placeholder=" " required>
+                <input type="tel" name="telephone" placeholder=" " >
                 <label>Phone Number</label>
             </div>
             <div class="form-group">
-                <input type="text" name="adresse" placeholder=" " required>
+                <input type="text" name="adresse" placeholder=" " >
                 <label>Address</label>
             </div>
             <div class="form-group full-width">
@@ -174,7 +174,7 @@ ob_start();
                 <label>Description</label>
             </div>
             <div class="form-group">
-                <select name="statut" required>
+                <select name="statut" >
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                 </select>
@@ -203,22 +203,22 @@ ob_start();
             <input type="hidden" name="id">
             <div class="form-row">
                 <div class="form-group">
-                    <input type="text" name="nom_compagne" placeholder=" " required>
+                    <input type="text" name="nom_compagne" placeholder=" " >
                     <label>Campaign Name</label>
                 </div>
             </div>
             <div class="form-row">
                 <div class="form-group">
-                    <input type="date" name="date_debut" placeholder=" " required>
+                    <input type="date" name="date_debut" placeholder=" " >
                     <label>Start Date</label>
                 </div>
                 <div class="form-group">
-                    <input type="date" name="date_fin" placeholder=" " required>
+                    <input type="date" name="date_fin" placeholder=" " >
                     <label>End Date</label>
                 </div>
             </div>
             <div class="form-group">
-                <input type="number" name="budget" placeholder=" " required onkeyup="validateBudget(this)">
+                <input type="number" name="budget" placeholder=" "  onkeyup="validateBudget(this)">
                 <label>Budget</label>
             </div>
             <div class="form-group full-width">

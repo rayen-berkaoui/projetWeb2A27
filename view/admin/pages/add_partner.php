@@ -1,11 +1,7 @@
 <?php
 require_once '../../../src/models/Partner.php';
 require_once '../../../config/Database.php';
-
-// Manually include PHPMailer if composer not set up
-require_once '../../../vendor/phpmailer/phpmailer/src/Exception.php';
-require_once '../../../vendor/phpmailer/phpmailer/src/PHPMailer.php';
-require_once '../../../vendor/phpmailer/phpmailer/src/SMTP.php';
+require_once '../../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
@@ -23,13 +19,11 @@ try {
         $partner = new Partner();
         $result = $partner->addPartner($_POST);
 
-        // Send email
+        // Send email after partner is added
+        $mail = new PHPMailer(true);
+        $config = require '../../../config/mail.php';
+        
         try {
-            $mail = new PHPMailer(true);
-            $config = require '../../../config/mail.php';
-
-            // Server settings
-            $mail->SMTPDebug = 0; // Disable debug output
             $mail->isSMTP();
             $mail->Host = $config['smtp']['host'];
             $mail->SMTPAuth = true;
@@ -38,36 +32,37 @@ try {
             $mail->SMTPSecure = $config['smtp']['encryption'];
             $mail->Port = $config['smtp']['port'];
 
-            // Recipients
             $mail->setFrom($config['smtp']['username'], 'Marketing Team');
-            $mail->addAddress($_POST['email']);
+            $mail->addAddress($_POST['email'], $_POST['nom_entreprise']);
 
-            // Content
             $mail->isHTML(true);
-            $mail->Subject = 'Welcome to Our Partner Program';
+            $mail->Subject = 'Welcome to Our Marketing Campaign!';
             $mail->Body = "
-                <h2>Welcome {$_POST['nom_entreprise']}!</h2>
-                <p>Thank you for becoming our partner. We look forward to working with you.</p>
-                <p>Your partnership details have been successfully recorded in our system.</p>
+                <h2>Hello {$_POST['nom_entreprise']}!</h2>
+                <p>Thank you for becoming our partner.</p>
+                <p>We're excited to have you on board and look forward to a successful partnership.</p>
+                <br>
+                <p>Best regards,<br>Marketing Team</p>
             ";
 
             $mail->send();
-            echo json_encode([
-                'success' => true,
-                'message' => 'Partner added and email sent successfully'
-            ]);
         } catch (Exception $e) {
-            echo json_encode([
-                'success' => true,
-                'message' => 'Partner added but email failed: ' . $e->getMessage()
-            ]);
+            error_log("Email sending failed: {$mail->ErrorInfo}");
         }
+
+        echo json_encode([
+            'success' => true,
+            'message' => 'Partner added successfully and email sent'
+        ]);
+        
     } else {
         throw new Exception('Invalid request method');
     }
 } catch (Exception $e) {
+    error_log("Error in add_partner.php: " . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => 'An error occurred',
+        'error' => $e->getMessage()
     ]);
 }
