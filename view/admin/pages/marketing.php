@@ -137,6 +137,9 @@ ob_start();
             <button onclick="showAddPartnerModal()" class="add-partner-btn">
                 <span>➕</span> Add Partner
             </button>
+            <button onclick="exportPartnersAsPDF()" class="add-partner-btn" >
+                <span>📥</span> Export as PDF
+            </button>
         </div>
     </div>
 </div>

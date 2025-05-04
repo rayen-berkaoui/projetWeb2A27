@@ -463,3 +463,32 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 });
+function exportPartnersAsPDF() {
+    if (!currentCampaign?.id) {
+        alert('Please select a campaign first.');
+        return;
+    }
+
+    // Create a form to handle the download
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '/2A27/view/admin/pages/export_partners_pdf.php';
+    
+    // Add campaign ID as hidden input
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'campaign_id';
+    input.value = currentCampaign.id;
+    
+    form.appendChild(input);
+    document.body.appendChild(form);
+    
+    try {
+        form.submit();
+    } catch(e) {
+        console.error('Error exporting PDF:', e);
+        alert('Error generating PDF. Please try again.');
+    } finally {
+        document.body.removeChild(form);
+    }
+}
