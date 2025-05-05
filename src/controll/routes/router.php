@@ -45,8 +45,8 @@ switch ($cleanPath) {
         require_once __DIR__ . '/../../../view/user/pages/forums/forums.php';
         break;
 
-    case '/evenements':
-        require_once __DIR__ . '/../../../view/user/pages/evenements/evenements.php';
+    case '/events':
+        require_once  'C:\xampp1\htdocs\2A27\view\user\events\events.php';
         break;
 
     case '/avis':
@@ -151,10 +151,76 @@ switch ($cleanPath) {
         (new ProduitController())->index();
         break;
 
-    case '/admin/evenements':
-        require_once __DIR__ . '/admin/EvenementsController.php';
-        (new EvenementsController())->index();
-        break;
+        case '/admin/evenements':
+            require_once __DIR__ . '/admin/EvenementController.php';
+            $evenementController = new EvenementController($db);
+            $evenementController->indexEvenements(); // List all events
+            break;
+        
+        case '/admin/evenements/create':
+            require_once __DIR__ . '/admin/EvenementController.php';
+            $evenementController = new EvenementController($db);
+            $evenementController->createEvenement(); // Create a new event
+            break;
+        
+        case (preg_match('/^\/admin\/evenements\/edit\/(\d+)$/', $cleanPath, $matches) ? true : false):
+            require_once __DIR__ . '/admin/EvenementController.php';
+            $evenementController = new EvenementController($db);
+            $evenementController->editEvenement($matches[1]); // Edit event by ID
+            break;
+        
+        case (preg_match('/^\/admin\/evenements\/update\/(\d+)$/', $cleanPath, $matches) ? true : false):
+            require_once __DIR__ . '/admin/EvenementController.php';
+            $evenementController = new EvenementController($db);
+            $evenementController->updateEvenement($matches[1]); // Update event by ID
+            break;
+        
+        case (preg_match('/^\/admin\/evenements\/delete\/(\d+)$/', $cleanPath, $matches) ? true : false):
+            require_once __DIR__ . '/admin/EvenementController.php';
+            $evenementController = new EvenementController($db);
+            $evenementController->deleteEvenement($matches[1]); // Delete event by ID
+            break;
+            // === ADMIN ROUTES FOR RESERVATIONS ===
+case '/admin/reservations':
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->indexReservations(); // List all reservations
+    break;
+
+case '/admin/reservations/create':
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->createReservation(); // Create a new reservation
+    break;
+
+case (preg_match('/^\/admin\/reservations\/edit\/(\d+)$/', $cleanPath, $matches) ? true : false):
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->editReservation($matches[1]); // Edit reservation by ID
+    break;
+
+case (preg_match('/^\/admin\/reservations\/update\/(\d+)$/', $cleanPath, $matches) ? true : false):
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->updateReservation($matches[1]); // Update reservation by ID
+    break;
+
+case (preg_match('/^\/admin\/reservations\/delete\/(\d+)$/', $cleanPath, $matches) ? true : false):
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->deleteReservation($matches[1]); // Delete reservation by ID
+    break;
+case (preg_match('/^\/events\/reserve\/(\d+)$/', $cleanPath, $matches) ? true : false):
+    require_once __DIR__ . '/admin/EvenementController.php'; // adjust if it's in a different folder
+    $evenementController = new EvenementController($db);
+    $evenementController->publicReserveForm($matches[1]); // Add this method
+    break;
+case '/events/reserve/submit':
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->submitPublicReservation(); // Add this method
+    break;
+    
 
     // === 404 CASE ===
     default:

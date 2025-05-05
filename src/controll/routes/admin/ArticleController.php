@@ -1,5 +1,5 @@
 <?php
-require_once 'C:\xampp\htdocs\2A27\src\domain\ArticleType.php';
+require_once 'C:\xampp1\htdocs\2A27\src\domain\ArticleType.php';
 class ArticleController {
     private $db;
 
@@ -17,7 +17,7 @@ class ArticleController {
         $stmt->execute();
         $articles = $stmt->fetchAll(PDO::FETCH_ASSOC); // Use fetchAll for PDO
         
-        include 'C:\xampp\htdocs\2A27\view\admin\pages\articles\list.php'; 
+        include 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\list.php'; 
     }
 
     // Show the create form and process form submission
@@ -44,7 +44,7 @@ class ArticleController {
         $type_result->execute();
         $types = $type_result->fetchAll(PDO::FETCH_ASSOC);
 
-        include 'C:\xampp\htdocs\2A27\view\admin\pages\articles\create.php';
+        include 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\create.php';
     }
 
     // Show the edit form
@@ -60,7 +60,7 @@ class ArticleController {
         $typesStmt = $db->query("SELECT id, nom FROM type");
         $types = $typesStmt->fetchAll(PDO::FETCH_ASSOC);
     
-        include 'C:\xampp\htdocs\2A27\view\admin\pages\articles\edit.php';
+        include 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\edit.php';
     }
     
 
@@ -111,14 +111,14 @@ class ArticleController {
         }
 
         // Include the view to display the create type form
-        include 'C:\xampp\htdocs\2A27\view\admin\pages\articles\createType.php';
+        include 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\createType.php';
     }
     public function listTypes() {
         // Fetch article types from the model
         $types = ArticleType::all();
     
         // Render the view for listing types
-        require_once  'C:\xampp\htdocs\2A27\view\admin\pages\articles\listType.php'; // Adjust path if necessary
+        require_once  'C:\xampp1\htdocs\2A27\view\admin\pages\articles\listType.php'; // Adjust path if necessary
     }
     public function deleteType($id) {
         // Prepare delete query
@@ -143,7 +143,7 @@ class ArticleController {
     
         if ($type) {
             // Show the edit form (you need to create an editType.php file)
-            require_once 'C:\xampp\htdocs\2A27\view\admin\pages\articles\editType.php';
+            require_once 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\editType.php';
         } else {
             // Type not found
             header("Location: /2A27/admin/articles/listTypes");
@@ -186,7 +186,7 @@ class ArticleController {
     
 
         // Render the page with the data (assuming you have a view file for editing)
-        require_once 'C:\xampp\htdocs\2A27\view\admin\pages\articles\editType.php';
+        require_once 'C:\xampp1\htdocs\2A27\view\admin\pages\articles\editType.php';
     }
     public function stats() {
         // Total number of articles

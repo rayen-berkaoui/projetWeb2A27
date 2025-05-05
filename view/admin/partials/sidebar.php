@@ -72,13 +72,15 @@ $sections = [
         ['label' => '➕ Add Produit', 'url' => '/2A27/admin/produit/create', 'key' => 'create']
     ]],
     'evenements' => ['📅 Événements', [
-        ['label' => '📅 View Events', 'url' => '/2A27/admin/evenements', 'key' => 'list'],
-        ['label' => '➕ Add Event', 'url' => '/2A27/admin/evenements/create', 'key' => 'create']
+    ['label' => '📅 View Events', 'url' => '/2A27/admin/evenements', 'key' => 'list'],
+    ['label' => '➕ Add Event', 'url' => '/2A27/admin/evenements/create', 'key' => 'create'],
+    ['label' => '📋 List Reservations', 'url' => '/2A27/admin/reservations', 'key' => 'list_reservations'],
+    ['label' => '➕ Add Reservation', 'url' => '/2A27/admin/reservations/create', 'key' => 'create_reservation'],
     ]],
     'user' => ['👥 User', [
         ['label' => '👤 Home', 'url' => '/2A27/home', 'key' => 'list'],
         ['label' => '➕ Register', 'url' => '/2A27/home/register', 'key' => 'create']
-    ]]
+    ]],
 ];
 
 foreach ($sections as $menu => [$label, $items]) {
@@ -124,6 +126,7 @@ foreach ($sections as $menu => [$label, $items]) {
     <!-- Footer -->
     <div style="
         position: absolute;
+        top: auto;
         bottom: 20px;
         left: 20px;
         right: 20px;
@@ -136,4 +139,16 @@ foreach ($sections as $menu => [$label, $items]) {
         Last loaded: <?= date('H:i:s') ?>
     </div>
 </aside>
+
 <script src="/2A27/view/assets/js/dashboard.js"></script>
+
+<!-- JavaScript to handle submenu toggle -->
+<script>
+    const navToggles = document.querySelectorAll('.nav-toggle');
+    navToggles.forEach(toggle => {
+        toggle.addEventListener('click', function() {
+            const subMenu = this.nextElementSibling;
+            subMenu.style.maxHeight = subMenu.style.maxHeight ? null : subMenu.scrollHeight + "px";
+        });
+    });
+</script>
