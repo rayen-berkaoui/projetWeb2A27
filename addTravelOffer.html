@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <title>Ajouter une offre de voyage</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+        }
+
+        header {
+            background-color: #a62a17;
+            padding: 20px;
+            color: white;
+            text-align: center;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        form input, form select, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .form-label {
+            font-weight: bold;
+        }
+
+        .form-button {
+            background-color: #a62a17;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .form-button:hover {
+            background-color: #c58777;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ajouter une offre de voyage</h1>
+</header>
+
+<main>
+    <form action="submit_offer.php" method="POST">
+        <div>
+            <label class="form-label" for="title">Titre de l'offre</label>
+            <input type="text" id="title" name="title" required minlength="3" placeholder="Entrez le titre" />
+        </div>
+
+        <div>
+            <label class="form-label" for="destination">Destination</label>
+            <input type="text" id="destination" name="destination" required minlength="3" pattern="[A-Za-z\s]+" placeholder="Entrez la destination" />
+        </div>
+
+        <div>
+            <label class="form-label" for="start_date">Date de départ</label>
+            <input type="date" id="start_date" name="start_date" required />
+        </div>
+
+        <div>
+            <label class="form-label" for="end_date">Date de retour</label>
+            <input type="date" id="end_date" name="end_date" required />
+        </div>
+
+        <div>
+            <label class="form-label" for="price">Prix</label>
+            <input type="number" id="price" name="price" required min="1" step="0.01" placeholder="Entrez le prix" />
+        </div>
+
+        <div>
+            <label class="form-label" for="category">Catgorie</label>
+            <select id="category" name="category" required>
+                <option value="famille">Famille</option>
+                <option value="couple">Couple</option>
+                <option value="aventure">Aventure</option>
+            </select>
+        </div>
+
+        <div>
+            <button type="submit" class="form-button">Ajouter l'offre</button>
+        </div>
+    </form>
+</main>
+
+</body>
+</html>

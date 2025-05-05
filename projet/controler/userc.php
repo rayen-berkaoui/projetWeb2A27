@@ -3,6 +3,7 @@ require_once('C:\xampp1\htdocs\web\projet\model\user.php');
 
 class UserController {
     private $pdo;
+    private $openai_api_key = "sk-votre-cle-api-openai"; // À remplacer par votre clé
 
     public function __construct() {
         try {
@@ -46,7 +47,7 @@ class UserController {
                 $user->getUsername(),
                 $user->getEmail(),
                 $user->getNumero(),
-                $user->getMdp(),  // mot de passe en clair
+                $user->getMdp(), // Mot de passe en clair
                 $roleId
             ]);
         } catch (Exception $e) {
@@ -66,7 +67,7 @@ class UserController {
             $stmt->execute([$username, $username]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row && $row['mdp'] === $password) { // mot de passe en clair
+            if ($row && $row['mdp'] === $password) { // Comparaison en clair
                 $user = new User(
                     $row['username'],
                     $row['nom_role'],
@@ -83,54 +84,54 @@ class UserController {
         return null;
     }
 
-    public function getUserByEmail($email) {
-        try {
-            $stmt = $this->pdo->prepare("
-                SELECT u.*, r.name AS nom_role 
-                FROM utilisateurs u
-                JOIN role r ON u.role = r.id
-                WHERE u.email = ?
-            ");
-            $stmt->execute([$email]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+    public function generatePassword() {
+        return $this->callOpenAI("Génère un mot de passe sécurisé.");
+    }
+    // Dans UserController.php
+public function getUserByUsername($username) {
+    try {
+        $stmt = $this->pdo->prepare("SELECT * FROM utilisateurs WHERE username = ? OR email = ?");
+        $stmt->execute([$username, $username]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            if ($row) {
-                return new User(
-                    $row['username'],
-                    $row['nom_role'],
-                    $row['email'],
-                    $row['mdp'],
-                    $row['numero']
-                );
-            }
-        } catch (PDOException $e) {
-            echo "❌ getUserByEmail error: " . $e->getMessage();
+        if ($row) {
+            $user = new User(
+                $row['username'],
+                $row['nom_role'], // Assurez-vous que la colonne existe ou modifiez selon vos colonnes
+                $row['email'],
+                $row['mdp'],
+                $row['numero']
+            );
+            $user->setIdUser($row['id_user']);
+            return $user;
+        } else {
+            return null; // Aucun utilisateur trouvé
         }
+    } catch (PDOException $e) {
+        echo "❌ Erreur lors de la récupération de l'utilisateur : " . $e->getMessage();
         return null;
     }
+}
 
-    public function updatePassword($email, $newPassword) {
-        try {
-            $stmt = $this->pdo->prepare("UPDATE utilisateurs SET mdp = ? WHERE email = ?");
-            return $stmt->execute([$newPassword, $email]);  // mot de passe en clair
-        } catch (PDOException $e) {
-            echo "❌ updatePassword error: " . $e->getMessage();
-            return false;
-        }
-    }
+    private function callOpenAI($prompt) {
+        $ch = curl_init();
 
-    public function updateUser($oldUsername, $newUsername, $email, $numero) {
-        try {
-            $stmt = $this->pdo->prepare("
-                UPDATE utilisateurs
-                SET username = ?, email = ?, numero = ?
-                WHERE username = ?
-            ");
-            return $stmt->execute([$newUsername, $email, $numero, $oldUsername]);
-        } catch (Exception $e) {
-            echo "❌ Erreur updateUser: " . $e->getMessage();
-            return false;
-        }
+        curl_setopt($ch, CURLOPT_URL, "https://api.openai.com/v1/completions");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([
+            'model' => 'text-davinci-003',
+            'prompt' => $prompt,
+            'max_tokens' => 16,
+        ]));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/json",
+            "Authorization: Bearer " . $this->openai_api_key
+        ]);
+
+        $response = curl_exec($ch);
+        $data = json_decode($response, true);
+        return $data['choices'][0]['text'];
     }
 }
 ?>

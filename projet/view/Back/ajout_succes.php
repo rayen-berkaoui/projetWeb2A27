@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'];
         $email = $_POST['email'];
         $numero = $_POST['numero'];
-        $mdp = password_hash($_POST['mdp'], PASSWORD_DEFAULT);  // Hacher le mot de passe
+        $mdp = $_POST['mdp']; // Plus de password_hash ici
         $role = $_POST['role'];
 
         // Validation de l'email et du numéro
@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // Insérer les données dans la base de données
             try {
                 $stmt = $conn->prepare("INSERT INTO utilisateurs (username, email, numero, mdp, role) VALUES (?, ?, ?, ?, ?)");
-                $stmt->execute(params: [$username, $email, $numero, $mdp, $role]);
+                $stmt->execute([$username, $email, $numero, $mdp, $role]);
 
                 // Rediriger vers la page avec le message de succès
                 header("Location: ajout_succes.php?ajout=success");
@@ -45,20 +45,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Ajout Réussi</title>
     <link rel="stylesheet" href="../assets/css/styleb.css" />
     <link rel="stylesheet" href="../assets/css/styless.css" />
-  <script src="../assets/js/scripts.js"></script>
-  
+    <script src="../assets/js/scripts.js"></script>
 </head>
 <body>
     <!-- Barre latérale -->
     <?php include('sidebar.php'); ?>
 
     <div class="main-content">
-       
-
-        
         <meta http-equiv="refresh" content="1; url=utilisateurs.php">
-
-        <p>Veillez patientez un moment</p>
+        <p>Veuillez patienter un moment...</p>
     </div>
 </body>
 </html>

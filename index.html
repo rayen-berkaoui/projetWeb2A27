@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   
+    <title>Travel Booking</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background-color: #f4f7fc; 
+        }
+
+        header {
+            background-color: #a62a17;
+            padding: 20px;
+            border-bottom: 3px solid #a62a17;
+        }
+
+        header img {
+            width: 50px;
+            height: auto;
+            vertical-align: middle;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            color: #ffffff; 
+            margin: 10px 0;
+        }
+
+        header p {
+            font-size: 1.2rem;
+            color: #f8918a;
+            margin-top: 5px;
+        }
+
+        nav {
+            margin-top: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1rem;
+            color: #b13c1e; 
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #b84d3a; 
+            text-decoration: underline;
+        }
+
+        main {
+            padding: 20px;
+            background-color: #e4c1bc;
+            margin-top: 20px;
+        }
+
+        main h2 {
+            font-size: 1.8rem;
+            color: #762008; 
+            margin-bottom: 15px;
+        }
+
+        main p {
+            font-size: 1rem;
+            color: #f9f9f9; 
+        }
+
+        /* Section des offres de voyage */
+        .offers-section {
+            margin-top: 30px;
+            padding: 20px;
+        }
+
+        .offer-card {
+            display: inline-block;
+            width: 250px;
+            margin: 10px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0, 1);
+            transition: transform 0.3s ease;
+        }
+
+        .offer-card:hover {
+            transform: scale(0.7); 
+        }
+
+        .offer-card img {
+            width: 100%;
+            border-radius: 5px;
+            height: 150px;
+            object-fit: cover;
+        }
+
+        .offer-card h3 {
+            font-size: 1.5rem;
+            color: #4a1003;
+            margin: 10px 0;
+        }
+
+        .offer-card p {
+            color: #c1c1c1;
+            font-size: 1rem;
+            margin-bottom: 10px;
+        }
+
+        .offer-card .price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #360707; 
+        }
+
+        /* Section About */
+        .about-section {
+            background-color: #f9f9f9; 
+            padding: 40px 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        .about-section h2 {
+            font-size: 2rem;
+            color: #a62a17;
+        }
+
+        .about-section p {
+            font-size: 1.2rem;
+            color: #a62a17;
+            line-height: 1.6;
+        }
+
+        /* Section Contact */
+        .contact-section {
+            background-color: #b35749; 
+            padding: 40px 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+        }
+
+        .contact-section h2 {
+            font-size: 2rem;
+            color: #333;
+        }
+
+        .contact-section p {
+            font-size: 1.2rem;
+            color: #ffffff;
+        }
+
+        .contact-section a {
+            color: #f7f3f3;
+            text-decoration: none;
+        }
+
+        .contact-section a:hover {
+            text-decoration: underline;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #b89894;
+            color: #ffffff;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        footer p {
+            font-size: 1rem;
+        }
+
+        footer a {
+            color: #a62a17;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsivité */
+        @media (max-width: 768px) {
+            .offer-card {
+                width: 90%;
+                margin: 10px auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <!-- Logo et navigation -->
+        <img src="esprit.png" alt="Esprit Logo">
+        <h1>TRAVEL BOOKING</h1>
+        <p>Explore our offers: Family Trips - Couples' Trips - Adventure and Sports Trips</p>
+        <nav>
+            <a href="travel-offers.html">Travel Offers</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="dashboard.html">Dashboard</a>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Welcome to Our Travel Site</h2>
+        <p>Explore, learn about us and feel free to contact us for more information!</p>
+    </main>
+
+    <!-- Section des offres de voyages -->
+    <section class="offers-section">
+        <h2>Our Travel Offers</h2>
+        
+        <div class="offer-card">
+            <img src="circus.png" alt="Family Trip">
+            <h3>Family Trip</h3>
+            <p>Have fun with your loved ones. Visit us.</p>
+            <p class="price">4500DT</p>
+        </div>
+
+        <div class="offer-card">
+            <img src="cabin.png" alt="Couple's Trip">
+            <h3>Couple's Trip</h3>
+            <p>A romantic getaway for you. Discover us for more informations.</p>
+            <p class="price">4000DT</p>
+        </div>
+
+        <div class="offer-card">
+            <img src="submarine.png" alt="Adventure Trip">
+            <h3>Adventure Trip</h3>
+            <p>Into thrill and adventure locations ?. Come have a look, don't miss our offers!.</p>
+            <p class="price">2000DT</p>
+        </div>
+    </section>
+
+    <!-- Section About -->
+    <section class="about-section">
+        <h2>About Travel Booking</h2>
+        <p>All we look for is to provide you with the best travel experiences and make booking your next trip as simple and enjoyable as possible.</p>
+       
+    </section>
+
+    <!-- Section Contact -->
+    <section class="contact-section">
+        <h2>Contact Information</h2>
+        <p>Email: <a href="mailto:delizar.chaaraoui@esprit.tn">delizar.chaaraoui@esprit.tn</a></p>
+        <p>Address: Lot 24, V5XR+M37 Résidence RAYHAN, Av. Habib Bourguiba , Ezzahra 2034</p>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>Contact Email: <a href="mailto:delizar.chaaraoui@esprit.tn">delizar.chaaraoui@esprit.tn</a></p>
+        <p>Address: Lot 24, V5XR+M37 Résidence RAYHAN, Av. Habib Bourguiba , Ezzahra 2034</p>
+        <p>Copyright © Your Website 2024</p>
+    </footer>
+
+</body>
+</html>

@@ -33,3 +33,23 @@ document.querySelectorAll(".btn-action").forEach(btn => {
       checkbox.checked = document.getElementById('checkAll').checked;
     });
   });
+  function searchUsers() {
+    // Récupère la valeur de la recherche
+    let searchQuery = document.getElementById('search').value.toLowerCase();
+    
+    // Récupère toutes les lignes de la table
+    let rows = document.querySelectorAll('#userTableBody tr');
+    
+    // Parcourt toutes les lignes
+    rows.forEach(row => {
+        // Récupère le texte du nom d'utilisateur
+        let username = row.querySelector('.username').textContent.toLowerCase();
+        
+        // Si le nom d'utilisateur contient la recherche, met en surbrillance la ligne
+        if (username.includes(searchQuery)) {
+            row.classList.add('highlight');
+        } else {
+            row.classList.remove('highlight');
+        }
+    });
+}

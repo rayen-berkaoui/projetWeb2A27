@@ -1,79 +1,95 @@
 <?php
-
 class User {
-    private $id_user;  // Adjusted to match the database field name
+    private $id_user;
     private $username;
+    private $role;
+    private $status;
     private $email;
     private $mdp;
-    private $role;
     private $numero;
-    private $login_count;
 
     // Constructor
-    public function __construct($username, $email, $mdp, $role, $numero, $id_user = null, $login_count = 0) {
+    public function __construct($username = "", $role = "", $status = "actif", $email = "", $mdp = "", $numero = "00000000") {
         $this->username = $username;
+        $this->role = $role;
+        $this->status = $status;
         $this->email = $email;
         $this->mdp = $mdp;
-        $this->role = $role;
         $this->numero = $numero;
-        $this->id_user = $id_user;
-        $this->login_count = $login_count;
     }
 
-    // Getter methods
-    public function getId() {
-        return $this->id_user;  // Use id_user instead of id
+    // Getters
+    public function getIdUser() {
+        return $this->id_user;
     }
 
     public function getUsername() {
         return $this->username;
     }
 
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function getStatus() {
+        return $this->status;
+    }
+
     public function getEmail() {
         return $this->email;
     }
 
-    public function getRole() {
-        return $this->role;
+    public function getMdp() {
+        return $this->mdp;
     }
 
     public function getNumero() {
         return $this->numero;
     }
 
-    public function getLoginCount() {
-        return $this->login_count;
-    }
-
-    // Setter methods if needed
-    public function setLoginCount($login_count) {
-        $this->login_count = $login_count;
-    }
-
-    public function setId($id_user) {
+    // Setters
+    public function setIdUser($id_user) {
         $this->id_user = $id_user;
     }
-}
 
-?>
+    public function setUsername($username) {
+        $this->username = $username;
+    }
 
+    public function setRole($role) {
+        $this->role = $role;
+    }
 
-    // Method to save user in the database
+    public function setStatus($status) {
+        $this->status = $status;
+    }
+
+    public function setEmail($email) {
+        $this->email = $email;
+    }
+
+    public function setMdp($mdp) {
+        $this->mdp = $mdp;
+    }
+
+    public function setNumero($numero) {
+        $this->numero = $numero;
+    }
+
+    // Save user to database
     public function save($pdo) {
         if ($this->id_user) {
-            // Update user if the id exists
             $query = "UPDATE utilisateurs SET username = ?, role = ?, status = ?, email = ?, mdp = ?, numero = ? WHERE id_user = ?";
             $stmt = $pdo->prepare($query);
             return $stmt->execute([$this->username, $this->role, $this->status, $this->email, $this->mdp, $this->numero, $this->id_user]);
         } else {
-            // Insert new user if no id exists
             $query = "INSERT INTO utilisateurs (username, role, status, email, mdp, numero) VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $pdo->prepare($query);
             return $stmt->execute([$this->username, $this->role, $this->status, $this->email, $this->mdp, $this->numero]);
         }
     }
 
-    // Method to find user by email
+    // Find user by email
     public static function getByEmail($email, $pdo) {
         $query = "SELECT * FROM utilisateurs WHERE email = ?";
         $stmt = $pdo->prepare($query);
@@ -88,7 +104,7 @@ class User {
         return null;
     }
 
-    // Method to update the password
+    // Update password
     public static function updatePassword($email, $newPassword, $pdo) {
         $query = "UPDATE utilisateurs SET mdp = ? WHERE email = ?";
         $stmt = $pdo->prepare($query);

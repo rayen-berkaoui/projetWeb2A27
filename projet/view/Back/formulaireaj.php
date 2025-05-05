@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $username = $_POST['username'];
         $email = $_POST['email'];
         $numero = $_POST['numero'];
-        $mdp = password_hash($_POST['mdp'], PASSWORD_DEFAULT);
+        $mdp = $_POST['mdp']; // Plus de hash ici
         $role = (int) $_POST['role'];
 
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -111,14 +111,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         const mdp = document.getElementById("mdp").value.trim();
         const role = document.getElementById("role").value;
 
-        // Vérifie que tous les champs sont remplis
         if (!username || !email || !numero || !mdp || !role) {
           alert("Veuillez remplir tous les champs.");
           e.preventDefault();
           return;
         }
 
-        // Vérifie l'email
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
           alert("Veuillez entrer une adresse email valide.");
@@ -126,14 +124,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           return;
         }
 
-        // Vérifie le numéro (8 chiffres)
         if (!/^\d{8}$/.test(numero)) {
           alert("Le numéro doit contenir exactement 8 chiffres.");
           e.preventDefault();
           return;
         }
 
-        // Vérifie le mot de passe (au moins 6 caractères par exemple)
         if (mdp.length < 6) {
           alert("Le mot de passe doit contenir au moins 6 caractères.");
           e.preventDefault();

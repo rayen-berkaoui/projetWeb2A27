@@ -22,7 +22,7 @@ $user = $_SESSION['user'];
 
     <div class="profile-info">
       <p><strong>Nom d'utilisateur :</strong> <?= htmlspecialchars($user['username']) ?></p>
-      <p><strong>Email :</strong> <?= htmlspecialchars($user['email']) ?></p>
+      
       <p><strong>Numéro :</strong> <?= htmlspecialchars($user['numero']) ?></p>
       <p><strong>Rôle :</strong> <?= htmlspecialchars($user['role']) ?></p>
     </div>
