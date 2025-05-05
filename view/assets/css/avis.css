@@ -1,0 +1,22 @@
+.avis-container {
+    padding: 20px;
+    background: #6c7bb9;
+    border-radius: 10px;
+    box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  }
+  
+  .avis-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .avis-table th, .avis-table td {
+    border: 1px solid #545481;
+    padding: 10px;
+    text-align: left;
+  }
+  
+  .avis-table th {
+    background-color: #413972;
+  }
+  

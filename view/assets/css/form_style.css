@@ -1,0 +1,48 @@
+.avis-form-container {
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 30px;
+    background: #f0f8ff;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 102, 204, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+  }
+  
+  .avis-form-container h2 {
+    color: #145da0;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .avis-form-container label {
+    display: block;
+    margin-top: 15px;
+    color: #2e86c1;
+    font-weight: bold;
+  }
+  
+  .avis-form-container input,
+  .avis-form-container textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 8px;
+    border: 1px solid #aac9f0;
+    background-color: #ffffff;
+  }
+  
+  .avis-form-container button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .avis-form-container button:hover {
+    background-color: #2980b9;
+  }
+  

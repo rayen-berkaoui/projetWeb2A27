@@ -1,0 +1,169 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #b3cff9;
+    margin: 0;
+    padding: 20px 0;
+  }
+  
+  .form-container {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 5px 15px rgba(0, 85, 255, 0.2);
+    width: 400px;
+  }
+  
+  h2 {
+    color: #0051ff;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  label {
+    display: block;
+    margin-top: 15px;
+    color: #003e99;
+  }
+  
+  input[type="number"],
+  textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+  }
+  
+  button {
+    background-color: #2b66ff;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 20px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #1f4edb;
+  }
+  .avis-box-container {
+    margin-top: 30px;
+    background: #e0ecf1;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  .avis-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .avis-card {
+    background: white;
+    padding: 20px;
+    width: 300px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    position: relative;
+    text-align: left;
+  }
+  
+  .quote {
+    font-size: 30px;
+    color: #6c76f9;
+    position: absolute;
+    top: 10px;
+    left: 15px;
+  }
+  
+  .avis-text {
+    margin-top: 30px;
+    font-style: italic;
+    color: #333;
+  }
+  
+  .avis-author {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+  }
+  
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+  }
+  .reply-btn {
+    margin-top: 12px;
+    background: none;
+    border: none;
+    color: #0051ff;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  
+  .reply-form {
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ccddee;
+    border-radius: 6px;
+    background: #f7faff;
+  }
+  
+  .reply-form input,
+  .reply-form textarea {
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #aac9f0;
+    box-sizing: border-box;
+  }
+  
+  .reply-form button {
+    margin-top: 8px;
+    padding: 8px 12px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .reply-form button:hover {
+    background-color: #2980b9;
+  }
+  .existing-comments .comment {
+    margin-bottom: 6px;
+  padding: 8px;
+  background: #eef7ff;
+  border-radius: 4px;
+  font-size: 14px;
+  }
+  .like-dislike-buttons {
+    display: inline-flex;
+    gap: 10px; /* Espacement entre les boutons */
+    margin-top: 10px;
+}
+
+.like-btn, .dislike-btn {
+    background: none;
+    border: 1px solid #3c0bff; /* Bordure gris clair */
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px; /* Coins arrondis */
+    
+}
+
+.like-btn:hover, .dislike-btn:hover {
+    background: #f0f0f0;
+    color: #d1deec;
+}
+
+  
