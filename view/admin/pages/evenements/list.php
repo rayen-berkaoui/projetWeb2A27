@@ -9,154 +9,139 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
     <meta charset="UTF-8">
     <title>Liste des Événements</title>
     <style>
-        /* Base styles */
+        :root {
+            --planetary-color: #334EAC;
+            --venus-color: #BAD6EB;
+            --meteor-color: #F7F2EB;
+            --galaxy-color: #081F5C;
+            --milky-way-color: #FFF9F0;
+            --universe-color: #7096D1;
+            --sky-color: #D0E3FF;
+            --text-color: #081F5C;
+            --btn-primary-color: #334EAC;
+            --btn-danger-color: #E74C3C;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--milky-way-color);
+            color: var(--text-color);
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: flex-start; /* Align content a little higher */
-            align-items: flex-start; /* Align content to the top */
-            height: 100vh;
-            padding-top: 50px; /* Give space from the top */
         }
 
-        /* Sidebar styling */
-        .sidebar {
-            position: fixed;
-            width: 250px;
-            height: 100%;
-            top: 0;
-            left: 0;
-            background-color: #2c3e50;
-            color: white;
-            padding-top: 20px;
-            padding-left: 10px;
-        }
-
-        .sidebar a {
-            color: white;
-            text-decoration: none;
-            display: block;
-            padding: 10px 15px;
-            font-size: 16px;
-            border-bottom: 1px solid #34495e;
-        }
-
-        .sidebar a:hover {
-            background-color: #34495e;
-        }
-
-        /* Content area */
         .content-area {
-            margin-left: 260px;
+            margin-left: 250px;
             padding: 30px;
-            background-color: #ecf0f1;
-            width: 70%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-
-        h2 {
-            color: #2c3e50;
             text-align: center;
         }
 
-        .btn {
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            margin: 5px;
+        h2 {
+            color: var(--galaxy-color);
+            font-size: 30px;
+            margin-bottom: 20px;
+            border-left: 5px solid var(--planetary-color);
+            padding-left: 12px;
+            display: inline-block;
         }
 
-        /* Button Styles */
+        .btn-container {
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 8px 18px;
+            font-size: 13px;
+            font-weight: 600;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-block;
+        }
+
         .btn-primary {
-            background-color: #27ae60; /* New Green */
+            background-color: var(--btn-primary-color);
+            color: #fff;
         }
 
         .btn-primary:hover {
-            background-color: #2ecc71; /* Hover effect */
+            background-color: var(--galaxy-color);
+            transform: translateY(-2px);
         }
 
         .btn-danger {
-            background-color: #e74c3c; /* Red */
+            background-color: var(--btn-danger-color);
+            color: #fff;
         }
 
         .btn-danger:hover {
-            background-color: #c0392b; /* Hover effect */
+            background-color: #C0392B;
+            transform: translateY(-2px);
         }
 
-        /* Table Styling */
-        .table-container {
-            width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+        .table-wrapper {
+            margin-top: 25px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            background-color: var(--sky-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
 
-        .table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            font-size: 13px;
         }
 
-        .table th, .table td {
-            padding: 12px 15px;
+        table th {
+            background-color: var(--planetary-color);
+            color: var(--milky-way-color);
+            padding: 10px;
             text-align: left;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.5px;
         }
 
-        .table th {
-            background-color: #3498db;
-            color: white;
-            border-top-left-radius: 8px;
-            border-top-right-radius: 8px;
+        table td {
+            padding: 10px;
+            background-color: var(--venus-color);
+            border-bottom: 1px solid var(--sky-color);
+            transition: background-color 0.3s ease;
         }
 
-        .table td {
-            background-color: #f9f9f9;
+        table tr:nth-child(even) td {
+            background-color: var(--meteor-color);
         }
 
-        .table tr:nth-child(even) td {
-            background-color: #f2f2f2;
+        table tr:hover td {
+            background-color: var(--universe-color);
+            color: #fff;
         }
 
-        .table td a {
-            padding: 8px 16px;
-            border-radius: 4px;
-            color: white;
-            text-decoration: none;
+        .actions {
+            display: flex;
+            gap: 6px;
         }
 
-        .table td a:hover {
-            opacity: 0.8;
-        }
-
-        /* Responsiveness */
-        @media (max-width: 768px) {
-            .content-area {
-                margin-left: 0;
-                padding: 15px;
-            }
-
-            .table th, .table td {
-                padding: 8px;
-            }
+        p {
+            color: var(--planetary-color);
+            font-size: 17px;
         }
     </style>
 </head>
 <body>
 <div class="content-area">
     <h2>Liste des Événements</h2>
-    <a href="/2A27/admin/evenements/create" class="btn btn-primary">Créer un Événement</a>
+    <div class="btn-container">
+        <a href="/2A27/admin/evenements/create" class="btn btn-primary">Créer un Événement</a>
+    </div>
 
-    <div class="table-container">
+    <div class="table-wrapper">
         <?php if (!empty($evenements)): ?>
             <table class="table">
                 <thead>
@@ -177,7 +162,7 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
                             <td><?= htmlspecialchars(substr($event['description'], 0, 50)) ?>...</td>
                             <td><?= htmlspecialchars($event['date']) ?></td>
                             <td><?= htmlspecialchars($event['lieu']) ?></td>
-                            <td>
+                            <td class="actions">
                                 <a href="/2A27/admin/evenements/edit/<?= $event['id'] ?>" class="btn btn-primary">Modifier</a>
                                 <a href="/2A27/admin/evenements/delete/<?= $event['id'] ?>" class="btn btn-danger">Supprimer</a>
                             </td>

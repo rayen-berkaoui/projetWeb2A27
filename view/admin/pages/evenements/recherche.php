@@ -35,6 +35,7 @@ if (!empty($_GET['lieu'])) {
     $params['lieu'] = '%' . $_GET['lieu'] . '%';
 }
 
+// Construction de la requête SQL
 $sql = "SELECT * FROM evenement";
 if (!empty($where)) {
     $sql .= " WHERE " . implode(" AND ", $where);
@@ -58,111 +59,134 @@ try {
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f9f9fb;
+            background-color: #F7F2EB; /* Meteor */
             margin: 0;
             padding: 0;
-            color: #333;
+            color: #081F5C; /* Galaxy */
         }
+
         .container {
             width: 80%;
             margin: 30px auto;
-            background-color: #fff;
+            background-color: #FFF9F0; /* Milky Way */
             padding: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border-radius: 12px;
         }
+
         h2 {
             text-align: center;
-            color: #2980b9;
+            color: #334EAC; /* Planetary */
             font-size: 24px;
             margin-bottom: 20px;
         }
+
         form {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            display: flex;
+            justify-content: space-between;
             gap: 20px;
             margin-bottom: 30px;
+            background-color: #BAD6EB; /* Venus */
+            padding: 20px;
+            border-radius: 10px;
+            flex-wrap: wrap; /* Permet aux éléments de se replier sur de petites résolutions */
         }
-        form div {
-            display: flex;
-            flex-direction: column;
-        }
+
         label {
             font-size: 14px;
-            color: #2c3e50;
+            color: #081F5C; /* Galaxy */
             margin-bottom: 8px;
         }
+
         input[type="text"], input[type="date"] {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
+            padding: 14px;
+            border: 2px solid #7096D1; /* Universe */
+            border-radius: 10px;
             font-size: 16px;
-            transition: border-color 0.3s ease;
+            background-color: #FFF9F0; /* Milky Way */
+            color: #081F5C;
+            transition: border 0.3s ease, background-color 0.3s ease;
+            width: 30%; /* Taille des zones de texte */
+            min-width: 180px;
         }
+
         input[type="text"]:focus, input[type="date"]:focus {
-            border-color: #2980b9;
+            border-color: #334EAC; /* Planetary */
+            background-color: #D0E3FF; /* Sky */
             outline: none;
         }
+
         button {
-            grid-column: span 2;
-            background-color: #2980b9;
+            background-color: #334EAC; /* Planetary */
             color: white;
             border: none;
-            padding: 12px;
+            padding: 14px;
             font-size: 18px;
             cursor: pointer;
             border-radius: 8px;
             transition: background-color 0.3s ease;
+            width: 100%; /* Le bouton prend toute la largeur */
         }
+
         button:hover {
-            background-color: #3498db;
+            background-color: #7096D1; /* Universe */
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            text-align: left;
+            margin-top: 30px;
         }
+
         table th, table td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
+            padding: 12px 20px;
+            text-align: center;
+            border: 1px solid #7096D1; /* Universe */
         }
+
         table th {
-            background-color: #2980b9;
+            background-color: #081F5C; /* Galaxy */
             color: white;
             font-size: 16px;
         }
-        table td {
-            font-size: 14px;
-        }
+
         table tr:nth-child(even) {
-            background-color: #f4f4f4;
+            background-color: #D0E3FF; /* Sky */
         }
+
         table tr:hover {
-            background-color: #ecf0f1;
+            background-color: #BAD6EB; /* Venus */
         }
-        .no-results {
-            text-align: center;
-            font-size: 18px;
-            color: #e74c3c;
-        }
+
         .info-box {
-            background-color: #f0f8ff;
-            border-left: 4px solid #2980b9;
+            background-color: #D0E3FF; /* Sky */
+            border-left: 4px solid #334EAC;
             padding: 15px;
             margin-bottom: 20px;
             font-size: 16px;
         }
+
         .reserve-btn {
-            background-color: #34495e;
+            background-color: #334EAC; /* Planetary */
             color: white;
             padding: 6px 12px;
             border-radius: 6px;
             text-decoration: none;
             font-size: 14px;
         }
+
         .reserve-btn:hover {
-            background-color: #2c3e50;
+            background-color: #081F5C; /* Galaxy */
+        }
+
+        .no-results {
+            text-align: center;
+            font-size: 18px;
+            color: #081F5C; /* Galaxy */
+            padding: 20px;
+            border: 1px solid #7096D1; /* Universe */
+            border-radius: 8px;
+            background-color: #D0E3FF; /* Sky */
         }
     </style>
 </head>

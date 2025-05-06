@@ -36,7 +36,7 @@ foreach ($events as $event) {
     <style>
         body {
             font-family: 'Poppins', sans-serif;
-            background: #FFF9F0; /* Milky Way */
+            background: #FFF9F0;
             margin: 0;
             padding: 0;
         }
@@ -45,9 +45,27 @@ foreach ($events as $event) {
             margin: 40px auto;
             padding: 20px;
         }
+        .top-bar {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .btn-home {
+            background-color: #334EAC;
+            color: #FFF9F0;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s ease;
+        }
+        .btn-home:hover {
+            background-color: #081F5C;
+        }
         h2 {
             text-align: center;
-            color: #334EAC; /* Planetary */
+            color: #334EAC;
             font-size: 36px;
             margin-bottom: 40px;
         }
@@ -57,7 +75,7 @@ foreach ($events as $event) {
             gap: 20px;
         }
         .event-card {
-            background: #BAD6EB; /* Venus */
+            background: #BAD6EB;
             border-radius: 15px;
             box-shadow: 0px 8px 20px rgba(0,0,0,0.1);
             padding: 20px;
@@ -65,13 +83,13 @@ foreach ($events as $event) {
             flex-direction: column;
             justify-content: space-between;
             transition: 0.3s ease;
-            color: #081F5C; /* Galaxy */
+            color: #081F5C;
         }
         .event-card:nth-child(2n) {
-            background: #D0E3FF; /* Sky */
+            background: #D0E3FF;
         }
         .event-card:nth-child(3n) {
-            background: #7096D1; /* Universe */
+            background: #7096D1;
             color: #FFF9F0;
         }
         .event-card:hover {
@@ -92,7 +110,7 @@ foreach ($events as $event) {
             margin-bottom: 10px;
         }
         .badge {
-            background-color: #334EAC; /* Planetary */
+            background-color: #334EAC;
             color: #FFF9F0;
             border-radius: 50px;
             padding: 6px 12px;
@@ -101,7 +119,7 @@ foreach ($events as $event) {
             margin-bottom: 15px;
         }
         .btn-start {
-            background: #081F5C; /* Galaxy */
+            background: #081F5C;
             color: #FFF9F0;
             border: none;
             padding: 10px 20px;
@@ -113,7 +131,7 @@ foreach ($events as $event) {
             margin-top: 15px;
         }
         .btn-start:hover {
-            background: #334EAC; /* Planetary */
+            background: #334EAC;
         }
         .no-events {
             text-align: center;
@@ -125,6 +143,12 @@ foreach ($events as $event) {
 <body>
 
 <div class="events-container">
+    <!-- Boutons haut de page -->
+    <div class="top-bar">
+        <a href="/2A27/home" class="btn-home">🏠 Accueil</a>
+        <a href="/2A27/view/admin/pages/evenements/recherche.php" class="btn-home">🔍 Recherche</a>
+    </div>
+
     <h2>Nos Événements</h2>
 
     <div class="events-grid">
