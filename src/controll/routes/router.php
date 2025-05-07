@@ -210,6 +210,13 @@ case (preg_match('/^\/admin\/reservations\/delete\/(\d+)$/', $cleanPath, $matche
     $evenementController = new EvenementController($db);
     $evenementController->deleteReservation($matches[1]); // Delete reservation by ID
     break;
+
+case (preg_match('/^\/admin\/reservations\/confirm\/(\d+)$/', $cleanPath, $matches) ? true : false):
+    require_once __DIR__ . '/admin/EvenementController.php';
+    $evenementController = new EvenementController($db);
+    $evenementController->confirmerReservation($matches[1]); // Confirm reservation by ID
+    break;
+
 case (preg_match('/^\/events\/reserve\/(\d+)$/', $cleanPath, $matches) ? true : false):
     require_once __DIR__ . '/admin/EvenementController.php'; // adjust if it's in a different folder
     $evenementController = new EvenementController($db);
@@ -220,7 +227,34 @@ case '/events/reserve/submit':
     $evenementController = new EvenementController($db);
     $evenementController->submitPublicReservation(); // Add this method
     break;
-    
+
+    case '/test-email':
+        require_once __DIR__ . '/../../../controller/EvenementController.php';
+        $controller = new EvenementController();
+        $controller->testEmail();
+        break;
+
+    case '/admin/test-email':
+    case '/2A27/admin/test-email':
+        require_once __DIR__ . '/admin/EvenementController.php';
+        $evenementController = new EvenementController($db);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $evenementController->testEmail();
+        } else {
+            $evenementController->testEmailForm();
+        }
+        break;
+
+    case '/admin/verify-email':
+    case '/2A27/admin/verify-email':
+        require_once __DIR__ . '/admin/EvenementController.php';
+        $evenementController = new EvenementController($db);
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $evenementController->testEmail();
+        } else {
+            $evenementController->testEmailForm();
+        }
+        break;
 
     // === 404 CASE ===
     default:

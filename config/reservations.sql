@@ -5,6 +5,7 @@ CREATE TABLE IF NOT EXISTS `reservations` (
     `email` varchar(100),
     `date_reservation` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     `id_evenement` int(11) NOT NULL,
+    `statut` varchar(20) DEFAULT 'en_attente',
     PRIMARY KEY (`id_reservation`),
     FOREIGN KEY (`id_evenement`) REFERENCES `evenements`(`id_evenement`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
@@ -93,4 +94,4 @@ GROUP BY
 HAVING 
     nombre_reservations >= 3
 ORDER BY 
-    e.date_evenement; 
+    e.date_evenement;

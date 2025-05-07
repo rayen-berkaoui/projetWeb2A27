@@ -1,4 +1,7 @@
-<?php $active_menu = 'evenements'; include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
+<?php 
+$active_menu = 'evenements';
+include_once __DIR__ . '/../../layout.php';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,33 +29,80 @@
     </style>
 </head>
 <body>
-    <div class="content-area">
-        <h2>Create New Evenement</h2>
-        <form method="POST" action="/2A27/admin/evenements/create">
+    <div class="content" style="margin-left: 260px; padding: 20px;">
+        <h1>➕ Créer un événement</h1>
+
+        <form method="POST" action="/2A27/admin/evenements/create" class="event-form">
             <div class="form-group">
-                <label for="titre">Title</label>
-                <input type="text" name="titre" id="titre" class="form-input" required>
+                <label for="titre">Titre de l'événement</label>
+                <input type="text" id="titre" name="titre" required class="form-control">
             </div>
 
             <div class="form-group">
                 <label for="description">Description</label>
-                <textarea name="description" id="description" class="form-input" required></textarea>
+                <textarea id="description" name="description" required class="form-control"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" name="date" id="date" class="form-input" required>
+                <label for="date_evenement">Date de l'événement</label>
+                <input type="date" id="date_evenement" name="date_evenement" required class="form-control">
             </div>
 
             <div class="form-group">
-                <label for="lieu">Location</label>
-                <input type="text" name="lieu" id="lieu" class="form-input" required>
+                <label for="lieu">Lieu</label>
+                <input type="text" id="lieu" name="lieu" required class="form-control">
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">Create Evenement</button>
+                <label for="admin_email">Email de l'administrateur</label>
+                <input type="email" id="admin_email" name="admin_email" required class="form-control" 
+                       placeholder="Entrez l'email qui recevra la confirmation">
             </div>
+
+            <button type="submit" class="btn btn-primary">Créer l'événement</button>
         </form>
     </div>
+
+    <style>
+        .event-form {
+            max-width: 600px;
+            margin: 20px 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        textarea.form-control {
+            height: 120px;
+        }
+
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-primary:hover {
+            background-color: #45a049;
+        }
+    </style>
 </body>
 </html>

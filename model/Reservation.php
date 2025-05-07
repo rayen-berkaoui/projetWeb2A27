@@ -11,6 +11,7 @@ class Reservation {
     public $email;
     public $date_reservation;
     public $id_evenement;
+    public $statut;
 
     public function __construct() {
         $this->connexion = config::getConnexion();
@@ -20,14 +21,15 @@ class Reservation {
     public function create($data) {
         try {
             $query = "INSERT INTO " . $this->table . " 
-                    (nom_participant, email, id_evenement) 
-                    VALUES (:nom, :email, :id_evenement)";
+                    (nom_participant, email, id_evenement, statut) 
+                    VALUES (:nom, :email, :id_evenement, :statut)";
             
             $stmt = $this->connexion->prepare($query);
             $stmt->execute([
                 ':nom' => $data['nom'],
                 ':email' => $data['email'],
-                ':id_evenement' => $data['id_evenement']
+                ':id_evenement' => $data['id_evenement'],
+                ':statut' => 'en_attente'
             ]);
             return $this->connexion->lastInsertId();
         } catch(PDOException $e) {
@@ -35,12 +37,35 @@ class Reservation {
         }
     }
 
+    // Récupérer une réservation par son ID
+    public function getById($id_reservation) {
+        try {
+            $query = "SELECT * FROM " . $this->table . " WHERE id_reservation = ?";
+            $stmt = $this->connexion->prepare($query);
+            $stmt->execute([$id_reservation]);
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch(PDOException $e) {
+            throw new Exception("Erreur lors de la récupération de la réservation : " . $e->getMessage());
+        }
+    }
+
+    // Mettre à jour le statut d'une réservation
+    public function updateStatut($id_reservation, $statut) {
+        try {
+            $query = "UPDATE " . $this->table . " SET statut = ? WHERE id_reservation = ?";
+            $stmt = $this->connexion->prepare($query);
+            return $stmt->execute([$statut, $id_reservation]);
+        } catch(PDOException $e) {
+            throw new Exception("Erreur lors de la mise à jour du statut : " . $e->getMessage());
+        }
+    }
+
     // Récupérer toutes les réservations avec les détails des événements
     public function getAllWithEvents() {
         try {
-            $query = "SELECT r.*, e.titre as titre_evenement, e.date_evenement, e.lieu 
+            $query = "SELECT r.*, e.titre as titre_evenement, e.date as date_evenement, e.lieu 
                     FROM " . $this->table . " r
-                    INNER JOIN evenements e ON r.id_evenement = e.id_evenement
+                    INNER JOIN evenement e ON r.id_evenement = e.id
                     ORDER BY r.date_reservation DESC";
             $stmt = $this->connexion->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -128,4 +153,4 @@ class Reservation {
             throw new Exception("Erreur lors de la récupération des statistiques : " . $e->getMessage());
         }
     }
-} 
+}

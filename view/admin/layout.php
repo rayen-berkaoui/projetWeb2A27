@@ -1,4 +1,14 @@
-<?php include 'partials/sidebar.php' ?>
+<?php
+// Initialize content if not set
+if (!isset($content)) {
+    ob_start();
+    if (isset($view_file) && file_exists($view_file)) {
+        include $view_file;
+    }
+    $content = ob_get_clean();
+}
+include 'partials/sidebar.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

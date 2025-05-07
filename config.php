@@ -9,7 +9,7 @@ class config
         $servername = 'localhost';
         $username = 'root';
         $password = '';
-        $dbname = 'ameni';
+        $dbname = 'db_html';  // Changement du nom de la base de données
 
         // Use a singleton pattern to ensure only one database connection is used
         if (self::$pdo === null) {

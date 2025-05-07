@@ -3,13 +3,13 @@ require_once __DIR__ . '/../config.php';
 
 class Evenement {
     private $connexion;
-    private $table = "evenements";
+    private $table = "evenement";
 
     // Propriétés
-    public $id_evenement;
+    public $id;
     public $titre;
     public $description;
-    public $date_evenement;
+    public $date;
     public $lieu;
     public $created_at;
 
@@ -17,10 +17,15 @@ class Evenement {
         $this->connexion = config::getConnexion();
     }
 
+    public function add($titre, $description, $date, $lieu) {
+        $stmt = $this->connexion->prepare("INSERT INTO " . $this->table . " (titre, description, date, lieu) VALUES (?, ?, ?, ?)");
+        return $stmt->execute([$titre, $description, $date, $lieu]);
+    }
+
     // Récupérer tous les événements
     public function getAll() {
         try {
-            $query = "SELECT * FROM " . $this->table . " ORDER BY date_evenement ASC";
+            $query = "SELECT * FROM " . $this->table . " ORDER BY date ASC";
             $stmt = $this->connexion->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $e) {
@@ -31,7 +36,7 @@ class Evenement {
     // Récupérer un événement par son ID
     public function getById($id) {
         try {
-            $query = "SELECT * FROM " . $this->table . " WHERE id_evenement = ?";
+            $query = "SELECT * FROM " . $this->table . " WHERE id = ?";
             $stmt = $this->connexion->prepare($query);
             $stmt->execute([$id]);
             return $stmt->fetch(PDO::FETCH_ASSOC);
@@ -44,14 +49,14 @@ class Evenement {
     public function create($data) {
         try {
             $query = "INSERT INTO " . $this->table . " 
-                    (titre, description, date_evenement, lieu) 
-                    VALUES (:titre, :description, :date_evenement, :lieu)";
+                    (titre, description, date, lieu) 
+                    VALUES (:titre, :description, :date, :lieu)";
             
             $stmt = $this->connexion->prepare($query);
             $stmt->execute([
                 ':titre' => $data['titre'],
                 ':description' => $data['description'],
-                ':date_evenement' => $data['date_evenement'],
+                ':date' => $data['date'],
                 ':lieu' => $data['lieu']
             ]);
             return $this->connexion->lastInsertId();
@@ -66,15 +71,15 @@ class Evenement {
             $query = "UPDATE " . $this->table . " 
                     SET titre = :titre, 
                         description = :description, 
-                        date_evenement = :date_evenement, 
+                        date = :date, 
                         lieu = :lieu 
-                    WHERE id_evenement = :id";
+                    WHERE id = :id";
             
             $stmt = $this->connexion->prepare($query);
             return $stmt->execute([
                 ':titre' => $data['titre'],
                 ':description' => $data['description'],
-                ':date_evenement' => $data['date_evenement'],
+                ':date' => $data['date'],
                 ':lieu' => $data['lieu'],
                 ':id' => $id
             ]);
@@ -86,7 +91,7 @@ class Evenement {
     // Supprimer un événement
     public function delete($id) {
         try {
-            $query = "DELETE FROM " . $this->table . " WHERE id_evenement = ?";
+            $query = "DELETE FROM " . $this->table . " WHERE id = ?";
             $stmt = $this->connexion->prepare($query);
             return $stmt->execute([$id]);
         } catch(PDOException $e) {
@@ -98,8 +103,8 @@ class Evenement {
     public function getUpcoming() {
         try {
             $query = "SELECT * FROM " . $this->table . " 
-                    WHERE date_evenement >= CURDATE() 
-                    ORDER BY date_evenement ASC 
+                    WHERE date >= CURDATE() 
+                    ORDER BY date ASC 
                     LIMIT 5";
             $stmt = $this->connexion->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -113,9 +118,9 @@ class Evenement {
         try {
             $query = "SELECT e.*, COUNT(r.id_reservation) as nb_reservations 
                     FROM " . $this->table . " e 
-                    LEFT JOIN reservations r ON e.id_evenement = r.id_evenement 
-                    GROUP BY e.id_evenement 
-                    ORDER BY nb_reservations DESC, e.date_evenement ASC 
+                    LEFT JOIN reservations r ON e.id = r.id_evenement 
+                    GROUP BY e.id 
+                    ORDER BY nb_reservations DESC, e.date ASC 
                     LIMIT 5";
             $stmt = $this->connexion->query($query);
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -123,7 +128,7 @@ class Evenement {
             throw new Exception("Erreur lors de la récupération des événements populaires : " . $e->getMessage());
         }
     }
-
+    
     // Récupérer les statistiques des événements
     public function getStats() {
         try {
@@ -140,14 +145,14 @@ class Evenement {
             $stats['total'] = $stmt->fetch(PDO::FETCH_ASSOC)['total'];
 
             // Événements à venir
-            $query = "SELECT COUNT(*) as a_venir FROM " . $this->table . " WHERE date_evenement >= CURDATE()";
+            $query = "SELECT COUNT(*) as a_venir FROM " . $this->table . " WHERE date >= CURDATE()";
             $stmt = $this->connexion->query($query);
             $stats['a_venir'] = $stmt->fetch(PDO::FETCH_ASSOC)['a_venir'];
 
             // Événements ce mois
             $query = "SELECT COUNT(*) as ce_mois FROM " . $this->table . " 
-                    WHERE MONTH(date_evenement) = MONTH(CURDATE()) 
-                    AND YEAR(date_evenement) = YEAR(CURDATE())";
+                    WHERE MONTH(date) = MONTH(CURDATE()) 
+                    AND YEAR(date) = YEAR(CURDATE())";
             $stmt = $this->connexion->query($query);
             $stats['ce_mois'] = $stmt->fetch(PDO::FETCH_ASSOC)['ce_mois'];
 
@@ -161,4 +166,4 @@ class Evenement {
             throw new Exception("Erreur lors de la récupération des statistiques : " . $e->getMessage());
         }
     }
-} 
+}

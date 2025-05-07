@@ -9,6 +9,7 @@ if (!isset($evenement) || empty($evenement)) {
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Réserver un événement - <?= htmlspecialchars($evenement['titre']) ?></title>
     <link href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/view/assets/css/style.css" rel="stylesheet">
     <script src="/2A27/view/assets/js/script.js" defer></script>

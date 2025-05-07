@@ -133,27 +133,171 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
             color: var(--planetary-color);
             font-size: 17px;
         }
+
+        /* Styles pour le formulaire de test d'email */
+        .test-email-section {
+            background-color: var(--sky-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .test-email-section h3 {
+            color: var(--galaxy-color);
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid var(--venus-color);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--planetary-color);
+        }
+
+        /* Styles pour la section d'email */
+        .email-verification-section {
+            background-color: var(--sky-color);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 40px auto 20px;
+            max-width: 600px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .email-verification-section h3 {
+            color: var(--galaxy-color);
+            margin-bottom: 20px;
+            font-size: 22px;
+            text-align: center;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .email-verification-section h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--planetary-color);
+        }
+
+        .email-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--venus-color);
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--planetary-color);
+            box-shadow: 0 0 0 3px rgba(51, 78, 172, 0.1);
+        }
+
+        .btn-primary {
+            font-size: 16px;
+            padding: 12px 24px;
+            background-color: var(--planetary-color);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--galaxy-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(51, 78, 172, 0.2);
+        }
+
+        /* Styles pour les messages de succès/erreur */
+        .alert {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
     </style>
 </head>
 <body>
 <div class="content-area">
     <h2>Liste des Réservations</h2>
 
-    <!-- Bouton "Voir les Statistiques" en haut de la page -->
+    <!-- Boutons de navigation -->
     <div class="btn-container">
         <a href="/2A27/view/admin/pages/evenements/stat.php" class="btn btn-primary">Voir les Statistiques</a>
-    </div>
-
-    <!-- Le bouton "Créer une Réservation" -->
-    <div class="btn-container">
         <a href="/2A27/admin/reservations/create" class="btn btn-primary">Créer une Réservation</a>
-    </div>
-
-    <!-- Bouton "Aller à Trie" -->
-    <div class="btn-container">
         <a href="http://localhost/2A27/view/admin/pages/reservations/trie.php" class="btn btn-primary">Aller à Trie</a>
     </div>
 
+    <!-- Tableau des réservations -->
     <?php if (!empty($reservations)): ?>
         <div class="table-wrapper">
             <table class="table">
@@ -164,6 +308,7 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
                         <th>Email</th>
                         <th>Date</th>
                         <th>Événement</th>
+                        <th>Statut</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -175,7 +320,17 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
                             <td><?= htmlspecialchars($r['email']) ?></td>
                             <td><?= htmlspecialchars($r['date_reservation']) ?></td>
                             <td><?= htmlspecialchars($r['evenement_nom']) ?></td>
+                            <td>
+                                <?php if ($r['statut'] === 'en_attente'): ?>
+                                    <span style="color: #f39c12;">En attente</span>
+                                <?php elseif ($r['statut'] === 'confirmee'): ?>
+                                    <span style="color: #27ae60;">Confirmée</span>
+                                <?php endif; ?>
+                            </td>
                             <td class="actions">
+                                <?php if ($r['statut'] === 'en_attente'): ?>
+                                    <a href="/2A27/admin/reservations/confirm/<?= $r['id_reservation'] ?>" class="btn btn-primary">Confirmer</a>
+                                <?php endif; ?>
                                 <a href="/2A27/admin/reservations/edit/<?= $r['id_reservation'] ?>" class="btn btn-primary">Modifier</a>
                                 <a href="/2A27/admin/reservations/delete/<?= $r['id_reservation'] ?>" class="btn btn-danger">Supprimer</a>
                             </td>
@@ -187,6 +342,19 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
     <?php else: ?>
         <p>Aucune réservation trouvée.</p>
     <?php endif; ?>
+
+    <!-- Section d'envoi d'email (déplacée sous le tableau) -->
+    <div class="email-verification-section">
+        <h3>Envoi de confirmation</h3>
+        <form method="POST" action="/2A27/admin/test-email" class="email-form">
+            <div class="form-group">
+                <label for="email">Adresse email du participant</label>
+                <input type="email" id="email" name="email" required class="form-control" 
+                       placeholder="Entrez l'adresse email pour envoyer la confirmation">
+            </div>
+            <button type="submit" class="btn btn-primary">Envoyer la confirmation</button>
+        </form>
+    </div>
 </div>
 </body>
 </html>
