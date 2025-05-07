@@ -39,31 +39,55 @@ if (!$avis) {
     <div class="container">
         <?php include 'sidebar.php'; ?>
         <main class="content">
-            <h2>Modifier l'Avis</h2>
-            <form method="POST" action="../../controller/modifierAvisController.php">
-                <input type="hidden" name="avis_id" value="<?= $avis['avis_id'] ?>">
+            <div class="form-container">
+                <h2>Modifier l'Avis</h2>
+                
+                <?php if (isset($_GET['error'])): ?>
+                    <div class="message error">
+                        Une erreur est survenue : <?= htmlspecialchars($_GET['error']) ?>
+                    </div>
+                <?php endif; ?>
+                
+                <?php if (isset($_GET['success'])): ?>
+                    <div class="message success">
+                        L'avis a été modifié avec succès !
+                    </div>
+                <?php endif; ?>
 
-                <label for="nom">Nom :</label>
-                <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($avis['nom']) ?>" required><br>
+                <form method="POST" action="../../controller/modifierAvisController.php">
+                    <input type="hidden" name="avis_id" value="<?= $avis['avis_id'] ?>">
 
-                <label for="prenom">Prénom :</label>
-                <input type="text" name="prenom" id="prenom" value="<?= htmlspecialchars($avis['prenom']) ?>" required><br>
+                    <div class="form-group">
+                        <label for="nom">Nom :</label>
+                        <input type="text" name="nom" id="nom" value="<?= htmlspecialchars($avis['nom']) ?>" required>
+                    </div>
 
-                <label for="contenu">Commentaire :</label><br>
-                <textarea name="contenu" id="contenu" rows="4" required><?= htmlspecialchars($avis['contenu']) ?></textarea><br>
+                    <div class="form-group">
+                        <label for="prenom">Prénom :</label>
+                        <input type="text" name="prenom" id="prenom" value="<?= htmlspecialchars($avis['prenom']) ?>" required>
+                    </div>
 
-                <label for="note">Note :</label>
-                <input type="number" name="note" id="note" min="1" max="5" value="<?= $avis['note'] ?>" required><br>
+                    <div class="form-group">
+                        <label for="email">Email :</label>
+                        <input type="email" name="email" id="email" value="<?= htmlspecialchars($avis['email']) ?>" required>
+                    </div>
 
-                <label for="type">Type :</label>
-                <select name="type" id="type" required>
-                    <option value="produit" <?= $avis['type'] == 'produit' ? 'selected' : '' ?>>Produit</option>
-                    <option value="service" <?= $avis['type'] == 'service' ? 'selected' : '' ?>>Service</option>
-                    <option value="site" <?= $avis['type'] == 'site' ? 'selected' : '' ?>>Site</option>
-                </select><br><br>
+                    <div class="form-group">
+                        <label for="contenu">Commentaire :</label>
+                        <textarea name="contenu" id="contenu" required><?= htmlspecialchars($avis['contenu']) ?></textarea>
+                    </div>
 
-                <button type="submit">Sauvegarder</button>
-            </form>
+                    <div class="form-group">
+                        <label for="note">Note :</label>
+                        <input type="number" name="note" id="note" min="1" max="5" value="<?= $avis['note'] ?>" required>
+                    </div>
+
+                    <div class="button-group">
+                        <button type="submit">Sauvegarder</button>
+                        <a href="dashboard.php" class="cancel-btn">Annuler</a>
+                    </div>
+                </form>
+            </div>
         </main>
     </div>
 </body>

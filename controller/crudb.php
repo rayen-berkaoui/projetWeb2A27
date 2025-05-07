@@ -1,111 +1,110 @@
 <?php
-require_once '../model/MailService.php';
+require_once __DIR__ . '/../config/database.php';
+require_once __DIR__ . '/../model/MailService.php';
 
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=bd_avis;charset=utf8", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
-}
+$pdo = Database::getInstance()->getConnection();
 
-// 1) Gestion du Like
-if (isset($_POST['action']) && $_POST['action'] === 'like' && isset($_POST['commentaire_id'])) {
-    $commentaireId = (int)$_POST['commentaire_id'];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
+    try {
+        switch ($_POST['action']) {
+            case 'ajouter':
+                // Validation côté serveur
+                $nom = trim($_POST['nom'] ?? '');
+                $prenom = trim($_POST['prenom'] ?? '');
+                $email = trim($_POST['email'] ?? '');
+                $contenu = trim($_POST['contenu'] ?? '');
+                $note = isset($_POST['note']) ? (int)$_POST['note'] : 0;
 
-    $stmt = $pdo->prepare("UPDATE commentaires SET likes = likes + 1 WHERE commentaire_id = :id");
-    if ($stmt->execute([':id' => $commentaireId])) {
-        echo "OK";
-    } else {
-        echo "Erreur";
-    }
-    exit;
-}
+                // Validation
+                if (empty($nom) || strlen($nom) < 2) {
+                    throw new Exception("Le nom doit contenir au moins 2 caractères");
+                }
+                if (empty($prenom) || strlen($prenom) < 2) {
+                    throw new Exception("Le prénom doit contenir au moins 2 caractères");
+                }
+                if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    throw new Exception("L'email n'est pas valide");
+                }
+                if (empty($contenu) || strlen($contenu) < 5) {
+                    throw new Exception("Le contenu doit contenir au moins 5 caractères");
+                }
+                if ($note < 1 || $note > 5) {
+                    throw new Exception("La note doit être comprise entre 1 et 5");
+                }
 
-// 2) Gestion du Dislike
-if (isset($_POST['action']) && $_POST['action'] === 'dislike' && isset($_POST['commentaire_id'])) {
-    $commentaireId = (int)$_POST['commentaire_id'];
+                $stmt = $pdo->prepare("
+                    INSERT INTO avis (nom, prenom, email, contenu, note, is_visible, date_creation) 
+                    VALUES (?, ?, ?, ?, ?, 1, NOW())
+                ");
+                
+                $result = $stmt->execute([
+                    $nom,
+                    $prenom,
+                    $email,
+                    $contenu,
+                    $note
+                ]);
 
-    $stmt = $pdo->prepare("UPDATE commentaires SET dislikes = dislikes + 1 WHERE commentaire_id = :id");
-    if ($stmt->execute([':id' => $commentaireId])) {
-        echo "OK";
-    } else {
-        echo "Erreur";
-    }
-    exit;
-}
+                if ($result) {
+                    // Envoi de l'email
+                    $mailService = new MailService();
+                    $mailSent = $mailService->envoyerMailRemerciement(
+                        $email,
+                        $nom . ' ' . $prenom
+                    );
 
-// 3) Gestion du signalement
-if (isset($_POST['action']) && $_POST['action'] === 'signaler' && isset($_POST['commentaire_id'])) {
-    $commentaireId = (int)$_POST['commentaire_id'];
+                    echo json_encode([
+                        'success' => true,
+                        'message' => 'Avis ajouté avec succès' . ($mailSent ? ' et email envoyé' : '')
+                    ]);
+                } else {
+                    throw new Exception("Erreur lors de l'ajout de l'avis");
+                }
+                break;
 
-    // Mettre à jour la table des commentaires pour marquer le commentaire comme signalé
-    $stmt = $pdo->prepare("UPDATE commentaires SET signaled = 1 WHERE commentaire_id = :id");
-    if ($stmt->execute([':id' => $commentaireId])) {
-        echo "OK";  // Si tout est bon, retour "OK"
-    } else {
-        echo "Erreur";  // Si une erreur survient
-    }
-    exit;
-}
+            case 'like':
+                $commentaire_id = isset($_POST['commentaire_id']) ? (int)$_POST['commentaire_id'] : 0;
+                if ($commentaire_id <= 0) {
+                    throw new Exception("ID de commentaire invalide");
+                }
+                $stmt = $pdo->prepare("UPDATE commentaires SET likes = likes + 1 WHERE commentaire_id = ?");
+                $stmt->execute([$commentaire_id]);
+                echo 'OK';
+                break;
 
-include '../model/db.php'; // Connexion PDO toujours disponible
+            case 'dislike':
+                $commentaire_id = isset($_POST['commentaire_id']) ? (int)$_POST['commentaire_id'] : 0;
+                if ($commentaire_id <= 0) {
+                    throw new Exception("ID de commentaire invalide");
+                }
+                $stmt = $pdo->prepare("UPDATE commentaires SET dislikes = dislikes + 1 WHERE commentaire_id = ?");
+                $stmt->execute([$commentaire_id]);
+                echo 'OK';
+                break;
 
-// Ajouter un avis + un premier commentaire
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'ajouter') {
-    if (isset($_POST['user_id'], $_POST['contenu'], $_POST['note'])) {
-        $user_id = htmlspecialchars($_POST['user_id']);
-        $email = $_POST['email'] ?? null;
-        $contenu = htmlspecialchars($_POST['contenu']);
-        $note = htmlspecialchars($_POST['note']);
+            case 'signaler':
+                $commentaire_id = isset($_POST['commentaire_id']) ? (int)$_POST['commentaire_id'] : 0;
+                if ($commentaire_id <= 0) {
+                    throw new Exception("ID de commentaire invalide");
+                }
+                $stmt = $pdo->prepare("UPDATE commentaires SET signale = signale + 1 WHERE commentaire_id = ?");
+                $stmt->execute([$commentaire_id]);
+                echo 'OK';
+                break;
 
-        try {
-            // Insertion dans avis
-            $stmt = $pdo->prepare("INSERT INTO avis (user_id, email, contenu, note, date_creation) VALUES (?, ?, ?, ?, NOW())");
-            $stmt->execute([$user_id, $email, $contenu, $note]);
-
-            $avis_id = $pdo->lastInsertId();
-
-            // Insertion dans commentaires
-            $stmt2 = $pdo->prepare("INSERT INTO commentaires (avis_id, user_id, contenu, date_creation) VALUES (?, ?, ?, NOW())");
-            $stmt2->execute([$avis_id, $user_id, $contenu]);
-
-            // ✅ Envoi de l'email de remerciement
-            if ($email) {
-                require_once '../model/MailService.php';
-                MailService::envoyerMailRemerciement($email, $user_id);
-            }
-
-            echo "Success";
-        } catch (PDOException $e) {
-            echo "Erreur DB: " . $e->getMessage();
+            default:
+                throw new Exception("Action invalide");
         }
-    } else {
-        echo "Champs manquants";
-    }
-    exit;
-}
-
-
-// Ajouter un Like
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'like') {
-    $commentaire_id = (int) $_POST['commentaire_id'];
-    $stmt = $pdo->prepare("UPDATE commentaires SET likes = likes + 1 WHERE commentaire_id = ?");
-    if ($stmt->execute([$commentaire_id])) {
-        echo 'OK';
-    } else {
-        echo 'Erreur';
-    }
-    exit;
-}
-
-// Ajouter un Dislike
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['action'] == 'dislike') {
-    $commentaire_id = (int) $_POST['commentaire_id'];
-    $stmt = $pdo->prepare("UPDATE commentaires SET dislikes = dislikes + 1 WHERE commentaire_id = ?");
-    if ($stmt->execute([$commentaire_id])) {
-        echo 'OK';
-    } else {
-        echo 'Erreur';
+    } catch (Exception $e) {
+        error_log("Erreur dans crudb.php ({$_POST['action']}) : " . $e->getMessage());
+        if (in_array($_POST['action'], ['like', 'dislike', 'signaler'])) {
+            echo 'Erreur : ' . $e->getMessage();
+        } else {
+            echo json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
     }
     exit;
 }

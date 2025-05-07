@@ -1,55 +1,106 @@
 <?php
-try {
-    $pdo = new PDO("mysql:host=localhost;dbname=bd_avis;charset=utf8", "root", "");
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    http_response_code(500);
-    exit("Erreur de connexion BDD");
-}
+require_once __DIR__ . '/../config/database.php';
 
-$action = $_REQUEST['action'] ?? '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+    $pdo = Database::getInstance()->getConnection();
+    
+    try {
+        switch ($action) {
+            case 'supprimer':
+                if (!isset($_POST['commentaire_id'])) {
+                    throw new Exception('ID du commentaire manquant');
+                }
+                $stmt = $pdo->prepare("DELETE FROM commentaires WHERE commentaire_id = ?");
+                $result = $stmt->execute([$_POST['commentaire_id']]);
+                echo $result ? 'OK' : 'ERROR';
+                break;
 
-switch ($action) {
-    case 'repondre':
-        // action via POST
-        $cid  = (int) $_POST['commentaire_id'];
-        $user = (int) $_POST['user_id']; // ou 0 si admin
-        $txt  = trim($_POST['reponse']);
+            case 'toggle_visibility':
+                if (!isset($_POST['commentaire_id'])) {
+                    throw new Exception('ID du commentaire manquant');
+                }
+                $stmt = $pdo->prepare("SELECT is_visible FROM commentaires WHERE commentaire_id = ?");
+                $stmt->execute([$_POST['commentaire_id']]);
+                $currentState = $stmt->fetchColumn();
+                if ($currentState === false) {
+                    throw new Exception('Commentaire non trouvé');
+                }
+                $newState = !$currentState;
+                $stmt = $pdo->prepare("UPDATE commentaires SET is_visible = ? WHERE commentaire_id = ?");
+                $stmt->execute([$newState, $_POST['commentaire_id']]);
+                echo json_encode([
+                    'success' => true,
+                    'newState' => $newState,
+                    'message' => $newState ? 'Commentaire rendu visible' : 'Commentaire masqué'
+                ]);
+                break;
 
-        // ✅ Validation manuelle
-        if (strlen($txt) < 3) {
-            echo json_encode(['success' => false, 'message' => 'La réponse est trop courte.']);
-            exit;
+            default:
+                echo json_encode(['success' => false, 'message' => 'Action invalide']);
+                break;
         }
+    } catch (Exception $e) {
+        error_log("Erreur dans commentaireController.php ($action) : " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
+} elseif ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $action = $_GET['action'] ?? '';
+    $pdo = Database::getInstance()->getConnection();
+    
+    try {
+        switch ($action) {
+            case 'refresh':
+                $stmt = $pdo->prepare("
+                    SELECT c.*, a.nom as auteur_avis
+                    FROM commentaires c
+                    INNER JOIN avis a ON c.avis_id = a.avis_id
+                    ORDER BY c.date_creation DESC
+                ");
+                $stmt->execute();
+                $commentaires = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $html = '';
+                if (empty($commentaires)) {
+                    $html = '<tr><td colspan="7">Aucun commentaire trouvé.</td></tr>';
+                } else {
+                    foreach ($commentaires as $commentaire) {
+                        $html .= '
+                            <tr data-comment-id="' . $commentaire['commentaire_id'] . '">
+                                <td>' . $commentaire['commentaire_id'] . '</td>
+                                <td>' . $commentaire['avis_id'] . '</td>
+                                <td>' . htmlspecialchars($commentaire['auteur_avis']) . '</td>
+                                <td>
+                                    ' . htmlspecialchars($commentaire['contenu']) . '
+                                    ' . ($commentaire['signale'] > 0 ? '<strong style="color:red;">[Signalé]</strong>' : '') . '
+                                </td>
+                                <td>' . date('d/m/Y H:i', strtotime($commentaire['date_creation'])) . '</td>
+                                <td>
+                                    <span class="status-badge ' . ($commentaire['is_visible'] ? 'visible' : 'hidden') . '">
+                                        ' . ($commentaire['is_visible'] ? 'Visible' : 'Masqué') . '
+                                    </span>
+                                </td>
+                                <td class="actions">
+                                    <button class="btn-visibility" onclick="toggleCommentVisibility(' . $commentaire['commentaire_id'] . ', ' . $commentaire['is_visible'] . ')">
+                                        <i class="fas ' . ($commentaire['is_visible'] ? 'fa-eye-slash' : 'fa-eye') . '"></i>
+                                        ' . ($commentaire['is_visible'] ? 'Masquer' : 'Afficher') . '
+                                    </button>
+                                    <button class="btn-delete" onclick="supprimerCommentaire(' . $commentaire['commentaire_id'] . ')">
+                                        <i class="fas fa-trash"></i> Supprimer
+                                    </button>
+                                </td>
+                            </tr>';
+                    }
+                }
+                echo json_encode(['success' => true, 'data' => $html]);
+                break;
 
-        $stmt = $pdo->prepare("
-            INSERT INTO commentaires (avis_id, parent_id, user_id, contenu, date_creation)
-            SELECT avis_id, :parent, :uid, :txt, NOW()
-            FROM commentaires WHERE commentaire_id = :parent
-        ");
-        $stmt->execute([
-            ':parent' => $cid,
-            ':uid'    => $user,
-            ':txt'    => $txt,
-        ]);
-        echo json_encode(['success' => true, 'message' => 'Réponse ajoutée.']);
-        break;
-
-    case 'signaler':
-        $cid = (int) $_GET['id'];
-        $stmt = $pdo->prepare("UPDATE commentaires SET signaled = 1 WHERE commentaire_id = ?");
-        $stmt->execute([$cid]);
-        echo json_encode(['success' => true, 'message' => 'Commentaire signalé.']);
-        break;
-
-    case 'supprimer':
-        $cid = (int) $_GET['id'];
-        $stmt = $pdo->prepare("DELETE FROM commentaires WHERE commentaire_id = ?");
-        $stmt->execute([$cid]);
-        echo json_encode(['success' => true, 'message' => 'Commentaire supprimé.']);
-        break;
-
-    default:
-        http_response_code(400);
-        echo json_encode(['success' => false, 'message' => 'Action invalide.']);
+            default:
+                echo json_encode(['success' => false, 'message' => 'Action invalide']);
+                break;
+        }
+    } catch (Exception $e) {
+        error_log("Erreur dans commentaireController.php (GET $action) : " . $e->getMessage());
+        echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+    }
 }
+?>

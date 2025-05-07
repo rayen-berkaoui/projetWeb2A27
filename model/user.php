@@ -13,10 +13,10 @@ class User {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function ajouterAvis($user_id, $contenu, $note) {
-        $sql = "INSERT INTO avis (user_id, contenu, note, date_creation) VALUES (?, ?, ?, NOW())";
+    public function ajouterAvis($nom, $prenom, $contenu, $note) {
+        $sql = "INSERT INTO avis (nom, prenom, contenu, note, date_creation) VALUES (?, ?, ?, NOW())";
         $stmt = $this->conn->prepare($sql);
-        return $stmt->execute([$user_id, $contenu, $note]);
+        return $stmt->execute([$nom, $prenom, $contenu, $note]);
     }
 
     public function supprimerAvis($id) {

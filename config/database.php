@@ -1,31 +1,34 @@
 <?php
 class Database {
-    private $host = 'localhost';  // Assure-toi que c'est correct
-    private $db_name = 'avis_db'; // Met à jour avec le nom correct de ta base de données
-    private $username = 'root';   // Si tu utilises 'root' comme utilisateur
-    private $password = '';       // Si tu n'as pas de mot de passe (par défaut pour XAMPP)
-    private $conn;
+    private static $instance = null;
+    private $pdo;
 
-    public function __construct() {
-        $this->conn = null;
+    private function __construct() {
         try {
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $exception) {
-            echo "Connection error: " . $exception->getMessage();
+            $this->pdo = new PDO(
+                "mysql:host=localhost;dbname=bd_avis;charset=utf8mb4",
+                "root",
+                "",
+                [
+                    PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+                    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+                    PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+                ]
+            );
+        } catch (PDOException $e) {
+            die("Erreur de connexion : " . $e->getMessage());
         }
     }
 
+    public static function getInstance() {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
+        return self::$instance;
+    }
+
     public function getConnection() {
-        return $this->conn;
-    }
-
-    public function prepare($query) {
-        return $this->conn->prepare($query);
-    }
-
-    public function query($query) {
-        return $this->conn->query($query);
+        return $this->pdo;
     }
 }
 ?>

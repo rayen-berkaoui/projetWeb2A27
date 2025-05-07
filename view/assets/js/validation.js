@@ -1,77 +1,44 @@
 function validerFormulaire() {
-  const note = parseInt(document.getElementById('note').value);
-  const contenu = document.getElementById('contenu').value.trim();
+    let isValid = true;
 
-  if (isNaN(note) || note < 1 || note > 5) {
-    alert("La note doit être entre 1 et 5.");
-    return false;
-  }
+    // Réinitialiser les messages d'erreur
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
 
-  if (contenu.length < 5) {
-    alert("L'avis est trop court.");
-    return false;
-  }
-
-  return true;
-}
-function validerFormulaire() {
-    const email = document.getElementById("email").value;
-    const regexEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!regexEmail.test(email)) {
-      alert("Veuillez entrer une adresse email valide.");
-      return false;
+    // Validation du nom
+    const nom = document.getElementById('nom').value.trim();
+    if (!nom || nom.length < 2) {
+        document.getElementById('nom_error').textContent = 'Veuillez entrer un nom valide (minimum 2 caractères).';
+        isValid = false;
     }
-    return true;
-  }
-  
-document.addEventListener('click', function (e) {
-  if (e.target.classList.contains('like-button')) {
-      const commentaireId = e.target.dataset.id;
 
-      fetch('../../controller/crudb.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-              action: 'like',
-              commentaire_id: commentaireId
-          })
-      })
-      .then(response => response.text())
-      .then(data => {
-          if (data.trim() === 'OK') {
-              alert('Like ajouté !');
-              // Tu peux aussi recharger la page ou mettre à jour le compteur
-          } else {
-              alert('Erreur lors de l\'ajout du Like');
-          }
-      })
-      .catch(error => {
-          console.error('Erreur:', error);
-      });
-  }
+    // Validation du prénom
+    const prenom = document.getElementById('prenom').value.trim();
+    if (!prenom || prenom.length < 2) {
+        document.getElementById('prenom_error').textContent = 'Veuillez entrer un prénom valide (minimum 2 caractères).';
+        isValid = false;
+    }
 
-  if (e.target.classList.contains('dislike-button')) {
-      const commentaireId = e.target.dataset.id;
+    // Validation de l'email
+    const email = document.getElementById('email').value.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email || !emailRegex.test(email)) {
+        document.getElementById('email_error').textContent = 'Veuillez entrer un email valide.';
+        isValid = false;
+    }
 
-      fetch('../../controller/crudb.php', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: new URLSearchParams({
-              action: 'dislike',
-              commentaire_id: commentaireId
-          })
-      })
-      .then(response => response.text())
-      .then(data => {
-          if (data.trim() === 'OK') {
-              alert('Dislike ajouté !');
-              // Tu peux aussi recharger la page ou mettre à jour le compteur
-          } else {
-              alert('Erreur lors de l\'ajout du Dislike');
-          }
-      })
-      .catch(error => {
-          console.error('Erreur:', error);
-      });
-  }
-});
+    // Validation du contenu
+    const contenu = document.getElementById('contenu').value.trim();
+    if (!contenu || contenu.length < 10) {
+        document.getElementById('contenu_error').textContent = 'Veuillez entrer un avis d\'au moins 10 caractères.';
+        isValid = false;
+    }
+
+    // Validation de la note
+    const note = document.getElementById('note').value;
+    if (!note || isNaN(note) || note < 1 || note > 5) {
+        document.getElementById('note_error').textContent = 'Veuillez entrer une note entre 1 et 5.';
+        isValid = false;
+    }
+
+    return isValid;
+}
