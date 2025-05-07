@@ -32,15 +32,12 @@ class EvenementController {
             $description = $_POST['description'];
             $date = $_POST['date_evenement'];
             $lieu = $_POST['lieu'];
-            $admin_email = $_POST['admin_email'];
 
             try {
                 $query = "INSERT INTO evenement (titre, description, date, lieu) VALUES (?, ?, ?, ?)";
                 $stmt = $this->db->prepare($query);
                 
                 if ($stmt->execute([$titre, $description, $date, $lieu])) {
-                    // Si l'insertion réussit, envoyer l'email
-                    $this->sendConfirmationEmail($titre, $date, $admin_email);
                     header("Location: /2A27/admin/evenements");
                     exit;
                 }
@@ -395,12 +392,8 @@ include 'C:\xampp1\htdocs\2A27\view\user\events\reserve.php';
             $email = $_POST['email'] ?? '';
             
             if (empty($email)) {
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Veuillez fournir une adresse email'
-                ]);
-                return;
+                header("Location: /2A27/admin/reservations?error=" . urlencode('Veuillez fournir une adresse email'));
+                exit;
             }
 
             try {
@@ -482,35 +475,20 @@ include 'C:\xampp1\htdocs\2A27\view\user\events\reserve.php';
                 $mail->AltBody = "Merci pour votre visite à GreenMind !\n\nVotre réservation est confirmée.\n\nÀ très bientôt !";
 
                 $success = $mail->send();
-                $error = $mail->ErrorInfo;
                 
-                // Log the result
                 if ($success) {
-                    error_log("Email sent successfully to: $email");
+                    header("Location: /2A27/admin/reservations?success=" . urlencode("Email de confirmation envoyé avec succès à $email"));
                 } else {
-                    error_log("Failed to send email. Error: $error");
+                    header("Location: /2A27/admin/reservations?error=" . urlencode("Erreur lors de l'envoi : " . $mail->ErrorInfo));
                 }
-                
-                header('Content-Type: application/json');
-                if ($success) {
-                    echo json_encode([
-                        'success' => true,
-                        'message' => "Email de test envoyé avec succès à $email"
-                    ]);
-                } else {
-                    echo json_encode([
-                        'success' => false,
-                        'message' => "Erreur lors de l'envoi : $error"
-                    ]);
-                }
+                exit;
             } catch (Exception $e) {
-                error_log("Exception lors de l'envoi de l'email : " . $e->getMessage());
-                header('Content-Type: application/json');
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Erreur : ' . $e->getMessage()
-                ]);
+                header("Location: /2A27/admin/reservations?error=" . urlencode($e->getMessage()));
+                exit;
             }
+        } else {
+            header("Location: /2A27/admin/reservations");
+            exit;
         }
     }
     

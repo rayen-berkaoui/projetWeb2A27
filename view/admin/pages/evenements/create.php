@@ -1,108 +1,154 @@
-<?php 
-$active_menu = 'evenements';
-include_once __DIR__ . '/../../layout.php';
-?>
+<?php $active_menu = 'evenements'; include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php'; ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
-    <script src="/2A27/view/assets/js/script.js" defer></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Evenement</title>
+    <title>Créer un Événement</title>
+
     <style>
-        /* Same styles as your article form */
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f5f7fa; color: #333; display: flex; min-height: 100vh; }
-        .sidebar { width: 250px; background-color: #2c3e50; color: white; position: fixed; top: 0; left: 0; height: 100%; padding-top: 20px; padding-left: 20px; }
-        .content-area { margin-left: 270px; padding: 20px; flex: 1; }
-        .form-group { margin-bottom: 15px; }
-        .form-input, textarea { width: 100%; padding: 10px; font-size: 1rem; border: 1px solid #ccc; border-radius: 5px; }
-        .form-input:focus, textarea:focus { border-color: #3498db; outline: none; }
-        .btn { padding: 10px 20px; font-size: 1rem; cursor: pointer; border: none; border-radius: 5px; transition: background 0.3s; }
-        .btn-primary { background-color: #3498db; color: white; }
-        .btn-primary:hover { background-color: #2980b9; }
-        @media (max-width: 768px) {
-            .sidebar { width: 200px; }
-            .content-area { margin-left: 220px; }
+        :root {
+            --planetary-color: #334EAC;
+            --venus-color: #BAD6EB;
+            --meteor-color: #F7F2EB;
+            --galaxy-color: #081F5C;
+            --milky-way-color: #FFF9F0;
+            --universe-color: #7096D1;
+            --sky-color: #D0E3FF;
+            --text-color: #081F5C;
         }
-    </style>
-</head>
-<body>
-    <div class="content" style="margin-left: 260px; padding: 20px;">
-        <h1>➕ Créer un événement</h1>
 
-        <form method="POST" action="/2A27/admin/evenements/create" class="event-form">
-            <div class="form-group">
-                <label for="titre">Titre de l'événement</label>
-                <input type="text" id="titre" name="titre" required class="form-control">
-            </div>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-            <div class="form-group">
-                <label for="description">Description</label>
-                <textarea id="description" name="description" required class="form-control"></textarea>
-            </div>
+        body {
+            background-color: var(--milky-way-color);
+            color: var(--text-color);
+            min-height: 100vh;
+        }
 
-            <div class="form-group">
-                <label for="date_evenement">Date de l'événement</label>
-                <input type="date" id="date_evenement" name="date_evenement" required class="form-control">
-            </div>
+        .content-area {
+            margin-left: 270px;
+            padding: 30px;
+        }
 
-            <div class="form-group">
-                <label for="lieu">Lieu</label>
-                <input type="text" id="lieu" name="lieu" required class="form-control">
-            </div>
+        h2 {
+            color: var(--galaxy-color);
+            font-size: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid var(--planetary-color);
+            padding-left: 15px;
+        }
 
-            <div class="form-group">
-                <label for="admin_email">Email de l'administrateur</label>
-                <input type="email" id="admin_email" name="admin_email" required class="form-control" 
-                       placeholder="Entrez l'email qui recevra la confirmation">
-            </div>
-
-            <button type="submit" class="btn btn-primary">Créer l'événement</button>
-        </form>
-    </div>
-
-    <style>
-        .event-form {
-            max-width: 600px;
-            margin: 20px 0;
+        .form-container {
+            background-color: var(--sky-color);
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
+            margin-bottom: 8px;
+            color: var(--text-color);
+            font-weight: 600;
+            font-size: 16px;
         }
 
         .form-control {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border: 2px solid var(--venus-color);
+            border-radius: 8px;
             font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: white;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--planetary-color);
+            box-shadow: 0 0 0 3px rgba(51, 78, 172, 0.1);
         }
 
         textarea.form-control {
-            height: 120px;
+            min-height: 150px;
+            resize: vertical;
         }
 
         .btn-primary {
-            background-color: #4CAF50;
+            background-color: var(--planetary-color);
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
             cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .btn-primary:hover {
-            background-color: #45a049;
+            background-color: var(--galaxy-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(51, 78, 172, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .content-area {
+                margin-left: 0;
+                padding: 20px;
+            }
         }
     </style>
+</head>
+<body>
+    <div class="content-area">
+        <h2>📅 Créer un Événement</h2>
+
+        <div class="form-container">
+            <form method="POST" action="/2A27/admin/evenements/create">
+                <div class="form-group">
+                    <label for="titre">Titre de l'événement</label>
+                    <input type="text" id="titre" name="titre" class="form-control" required 
+                           placeholder="Entrez le titre de l'événement">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" class="form-control" required 
+                              placeholder="Décrivez l'événement..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date de l'événement</label>
+                    <input type="date" id="date_evenement" name="date_evenement" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lieu">Lieu</label>
+                    <input type="text" id="lieu" name="lieu" class="form-control" required 
+                           placeholder="Lieu de l'événement">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Créer l'événement</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

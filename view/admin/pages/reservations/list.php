@@ -290,6 +290,19 @@ include_once 'C:\xampp1\htdocs\2A27\view\admin\partials\sidebar.php';
 <div class="content-area">
     <h2>Liste des Réservations</h2>
 
+    <!-- Messages d'alerte -->
+    <?php if (isset($_GET['success'])): ?>
+        <div class="alert alert-success">
+            <?= htmlspecialchars($_GET['success']) ?>
+        </div>
+    <?php endif; ?>
+    
+    <?php if (isset($_GET['error'])): ?>
+        <div class="alert alert-error">
+            <?= htmlspecialchars($_GET['error']) ?>
+        </div>
+    <?php endif; ?>
+
     <!-- Boutons de navigation -->
     <div class="btn-container">
         <a href="/2A27/view/admin/pages/evenements/stat.php" class="btn btn-primary">Voir les Statistiques</a>
