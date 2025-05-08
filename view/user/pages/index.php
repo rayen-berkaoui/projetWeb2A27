@@ -1,4 +1,6 @@
-<?php  ?>
+<?php
+session_start();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -18,10 +20,20 @@
             <li><a href="/2A27/about">About</a></li>
             <li><a href="/2A27/articles">Articles</a></li>
             <li><a href="/2A27/events">Events</a></li>
-            <li><a href="/2A27/forum">Forum</a></li>*ù
+            <li><a href="/2A27/forum">Forum</a></li>
             <li><a href="/2A27/marketing">Marketing</a></li>
             <li><a href="/2A27/avis">Avis</a></li>
-            <li><a href="/2A27/login">Login</a></li>
+
+            <!-- Check if the user is logged in -->
+            <?php if (isset($_SESSION['user']['id'])): ?>
+                <!-- Show Profile and Logout links if logged in -->
+                <li><a href="/2A27/profile">Profile</a></li>
+                <li><a href="/2A27/profile?logout=1">Logout</a></li>
+            <?php else: ?>
+                <!-- Show Login link if not logged in -->
+                <li><a href="/2A27/login">Login</a></li>
+            <?php endif; ?>
+
             <li><a href="/2A27/admin">Admin</a></li>
         </ul>
     </nav>

@@ -1,5 +1,11 @@
 <?php
-// PDO connection
+// Get the article ID from the URL
+$articleId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
+if ($articleId <= 0) {
+    die("Invalid article ID.");
+}
+
+// PDO connection (for your existing database interactions)
 try {
     $pdo = new PDO("mysql:host=localhost;dbname=db_html;charset=utf8", "root", "");
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -7,13 +13,7 @@ try {
     die("Connection failed: " . $e->getMessage());
 }
 
-// Get the article ID from the URL
-$articleId = isset($_GET['id']) ? (int)$_GET['id'] : 0;
-if ($articleId <= 0) {
-    die("Invalid article ID.");
-}
-
-// Fetch the article data
+// Fetch the article data (from your database)
 $stmt = $pdo->prepare("
     SELECT a.id, a.type_id, a.author, a.time_created, a.content, t.nom AS type_name
     FROM articles a
@@ -29,21 +29,89 @@ if (!$article) {
     die("Article not found.");
 }
 
-// Fetch recommended articles based on the type of the current article
-$stmtRecommendations = $pdo->prepare("
-    SELECT a.id, a.type_id, a.author, a.time_created, a.content, t.nom AS type_name
+// Fetch all articles to compare content for similarity
+$allArticlesStmt = $pdo->prepare("
+    SELECT a.id, a.content, t.nom AS type_name
     FROM articles a
     JOIN type t ON a.type_id = t.id
-    WHERE a.type_id = :type_id AND a.id != :article_id
-    ORDER BY a.time_created DESC
-    LIMIT 5
+    WHERE a.id != :id
 ");
-$stmtRecommendations->bindValue(':type_id', $article['type_id'], PDO::PARAM_INT);  // Corrected to use type_id
-$stmtRecommendations->bindValue(':article_id', $articleId, PDO::PARAM_INT);
-$stmtRecommendations->execute();
-$recommendedArticles = $stmtRecommendations->fetchAll(PDO::FETCH_ASSOC);
+$allArticlesStmt->bindValue(':id', $articleId, PDO::PARAM_INT);
+$allArticlesStmt->execute();
+$allArticles = $allArticlesStmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Function to calculate content similarity using a basic approach (word overlap or cosine similarity)
+function calculateContentSimilarity($content1, $content2) {
+    // Convert content to lowercase and remove punctuation for better matching
+    $content1 = strtolower($content1);
+    $content2 = strtolower($content2);
+
+    // Tokenize the content into words (simple word matching)
+    $words1 = preg_split('/\s+/', $content1);
+    $words2 = preg_split('/\s+/', $content2);
+
+    // Calculate the overlap of words (intersection of both word lists)
+    $commonWords = array_intersect($words1, $words2);
+    $similarity = count($commonWords) / max(count($words1), count($words2)); // Simple similarity score
+
+    return $similarity;
+}
+
+// Calculate similarity for each article
+$similarArticles = [];
+foreach ($allArticles as $otherArticle) {
+    $similarity = calculateContentSimilarity($article['content'], $otherArticle['content']);
+    if ($similarity > 0.1) { // Threshold for similarity (you can adjust this)
+        $similarArticles[] = [
+            'id' => $otherArticle['id'],
+            'type_name' => $otherArticle['type_name'],
+            'similarity' => $similarity
+        ];
+    }
+}
+
+// Sort the similar articles by similarity (highest first)
+usort($similarArticles, function($a, $b) {
+    return $b['similarity'] <=> $a['similarity'];
+});
+
+// You can refine the recommendations using OpenAI if desired (optional)
+$apiUrl = "https://api.openai.com/v1/completions";
+$apiKey = "";
+
+// Prepare the data for OpenAI to refine the recommendation based on the current article's content
+$openAiPrompt = "Please recommend similar articles based on the following content: " . $article['content'];
+
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $apiUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_HTTPHEADER, [
+    "Content-Type: application/json",
+    "Authorization: Bearer $apiKey"
+]);
+
+$data = [
+    "model" => "text-davinci-003", // You can choose the model you want to use
+    "prompt" => $openAiPrompt,
+    "max_tokens" => 200, // Adjust based on the number of tokens you want
+];
+
+$jsonData = json_encode($data);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $jsonData);
+
+$response = curl_exec($ch);
+if ($response === false) {
+    die("Error fetching recommendations from OpenAI API.");
+}
+
+$openAiRecommendations = json_decode($response, true);
+
+curl_close($ch);
+
 ?>
 
+<!-- HTML to display the article and recommendations -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,14 +152,14 @@ $recommendedArticles = $stmtRecommendations->fetchAll(PDO::FETCH_ASSOC);
         <!-- Recommendations Section -->
         <section id="recommended-articles">
             <h3>Recommended Articles</h3>
-            <?php if (count($recommendedArticles) > 0): ?>
+            <?php if (count($similarArticles) > 0): ?>
                 <ul>
-                    <?php foreach ($recommendedArticles as $recommended): ?>
+                    <?php foreach ($similarArticles as $recommended): ?>
                         <li>
                             <a href="/2A27/view/user/pages/articles/LireArticle.php?id=<?= $recommended['id'] ?>">
-                                <?= htmlspecialchars($recommended['type_name']) ?> - <?= htmlspecialchars($recommended['author']) ?>
+                                <?= htmlspecialchars($recommended['type_name']) ?>
                             </a>
-                            <p><?= nl2br(htmlspecialchars(substr($recommended['content'], 0, 100))) ?>...</p>
+                            <p>Similarity Score: <?= number_format($recommended['similarity'], 2) ?></p>
                         </li>
                     <?php endforeach; ?>
                 </ul>
