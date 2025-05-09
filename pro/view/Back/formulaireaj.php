@@ -1,5 +1,5 @@
 <?php
-include('../../config.php');
+require_once('C:\xampp\htdocs\2A27\pro\config.php');
 $conn = config::getConnexion();
 
 // Récupération des rôles pour le select
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $conn->prepare("INSERT INTO utilisateurs (username, email, numero, mdp, role) VALUES (?, ?, ?, ?, ?)");
                 $stmt->execute([$username, $email, $numero, $mdp, $role]);
-                header("Location: ajout_succes.php?ajout=success");
+                header("Location: http://127.0.0.1/2A27/admin/user");
                 exit();
             } catch (PDOException $e) {
                 echo "Erreur : " . $e->getMessage();

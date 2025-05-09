@@ -2,8 +2,8 @@
 // Remove any output before this point to prevent TCPDF errors
 ob_start();  // Start output buffering
 
-require_once('../../config.php');
-require_once('../../vendor/autoload.php'); // Include TCPDF
+require_once('C:\xampp\htdocs\2A27\pro\config.php');
+require_once('C:\xampp\htdocs\2A27\pro\vendor\autoload.php'); // Include TCPDF
 
 // Database connection
 $conn = config::getConnexion();

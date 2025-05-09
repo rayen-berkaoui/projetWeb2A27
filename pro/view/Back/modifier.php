@@ -1,5 +1,5 @@
 <?php
-require_once('../../config.php');
+require_once('C:\xampp\htdocs\2A27\pro\config.php');
 $conn = config::getConnexion();
 
 // Récupérer tous les rôles
@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         ]);
     }
 
-    header("Location: utilisateurs.php");
+    header("Location: http://127.0.0.1/2A27/admin/user");
     exit();
 }
 ?>
@@ -57,8 +57,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Formulaire d'ajout/édition d'utilisateur</title>
-  <link rel="stylesheet" href="../assets/css/styleb.css" />
-  <link rel="stylesheet" href="../assets/css/stylem.css" />
+  <link rel="stylesheet" href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/pro/view/assets/css/styleb.css">
+  <link rel="stylesheet" href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/pro/view/assets/css/stylem.css">
   <script src="../assets/js/scriptm.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", () => {

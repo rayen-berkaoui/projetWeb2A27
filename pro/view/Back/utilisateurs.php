@@ -1,5 +1,5 @@
 <?php
-require_once('../../config.php');
+require_once('C:\xampp\htdocs\2A27\pro\config.php');
 $conn = config::getConnexion();
 
 // Suppression
@@ -7,7 +7,7 @@ if (isset($_POST['delete'])) {
     $id = $_POST['id_user'];
     $stmt = $conn->prepare("DELETE FROM utilisateurs WHERE id_user = :id");
     $stmt->execute(['id' => $id]);
-    header("Location: utilisateurs.php");
+    header("Location: http://127.0.0.1/2A27/admin/user");
     exit();
 }
 
@@ -28,8 +28,8 @@ if ($query) {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Liste des Utilisateurs</title>
-  <link rel="stylesheet" href="../assets/css/styleb.css" />
-  <link rel="stylesheet" href="../assets/css/stylesu.css" />
+  <link rel="stylesheet" href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/pro/view/assets/css/styleb.css">
+  <link rel="stylesheet" href="http://<?= $_SERVER['HTTP_HOST'] ?>/2A27/pro/view/assets/css/stylesu.css">
   <script src="../assets/js/scriptu.js" defer></script>
   <style>
     /* Ajouter un style pour la surbrillance */
@@ -46,8 +46,8 @@ if ($query) {
 
     <div class="user-actions">
       <div class="left-buttons">
-        <a href="formulaireaj.php"><button class="btn-ajouter">➕ Ajouter un Utilisateur</button></a>
-        <a href="export_pdf.php" target="_blank"><button class="btn-ajouter btn-export">📄 Exporter en PDF</button></a>
+        <a href="user/formulair"><button class="btn-ajouter">➕ Ajouter un Utilisateur</button></a>
+        <a href="user/export_pdf" target="_blank"><button class="btn-ajouter btn-export">📄 Exporter en PDF</button></a>
       </div>
       <!-- Champ de recherche avec un bouton -->
       <div class="search-container">
@@ -85,11 +85,13 @@ if ($query) {
                 <td><?= htmlspecialchars($row['numero']); ?></td>
                 <td>
                   <div class="right-buttons">
+                    <!-- Separate Delete Form -->
                     <form action="" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');">
                       <input type="hidden" name="id_user" value="<?= $row['id_user']; ?>" />
                       <button type="submit" name="delete" class="btn-supprimer">🗑️ Supprimer</button>
                     </form>
-                    <a href="modifier.php?id_user=<?= $row['id_user']; ?>">
+                    <!-- Separate Link for Modifier -->
+                    <a href="/2A27/admin/user/modifier.php?id_user=<?= $row['id_user']; ?>">
                       <button class="btn-modifier">✏️ Modifier</button>
                     </a>
                   </div>

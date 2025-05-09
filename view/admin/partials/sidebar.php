@@ -76,7 +76,7 @@ $sections = [
     ]],
     'user' => ['👥 User', [
         ['label' => '👤 Home', 'url' => '/2A27/home', 'key' => 'list'],
-        ['label' => '➕ Register', 'url' => '/2A27/home/register', 'key' => 'create']
+        ['label' => '➕ USERS Dashboard', 'url' => '/2A27/admin/user', 'key' => 'create']
     ]]
 ];
 

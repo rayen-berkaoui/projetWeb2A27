@@ -1,7 +1,7 @@
 <?php
 class Config {
     private static $host = "localhost";
-    private static $dbname = "projetweb2a";
+    private static $dbname = "db_html";
     private static $username = "root";
     private static $password = "";
     private static $conn = null;

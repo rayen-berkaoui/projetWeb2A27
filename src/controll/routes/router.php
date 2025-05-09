@@ -78,13 +78,29 @@ case '/profile':
         (new DashboardController())->index();
         break;
 
-    case '/admin/users':
-        echo "Users dashboard - to be implemented";
+    case '/admin/user':
+        require_once 'C:\xampp\htdocs\2A27\pro\view\Back\utilisateurs.php';
         break;
 
-    case '/admin/settings':
-        echo "Settings dashboard - to be implemented";
-        break;
+    case '/admin/user/formulair':
+    require_once 'C:\xampp\htdocs\2A27\pro\view\Back\formulaireaj.php';
+    break;
+
+case (preg_match('/^\/admin\/user\/modifier\.php$/', $cleanPath) ? true : false):
+    if (isset($_GET['id_user'])) {
+        $id_user = $_GET['id_user'];
+        require_once 'C:\xampp\htdocs\2A27\pro\view\Back\modifier.php';
+    }
+    break;
+
+
+
+case '/admin/user/export_pdf':
+    require_once 'C:\xampp\htdocs\2A27\pro\view\Back\export_pdf.php';
+    break;
+case '/admin/user/ajout_succes':
+    require_once  'C:\xampp\htdocs\2A27\pro\view\Back\ajout_succes.php';
+    break;
 
     case '/admin/articles':
         $articleController->index();
