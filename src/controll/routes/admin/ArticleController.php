@@ -1,5 +1,5 @@
 <?php
-require_once 'C:\xampp\htdocs\2A27\src\domain\ArticleType.php';
+require_once 'C:\xampp1\htdocs\2A27\src\domain\ArticleType.php';
 class ArticleController {
     private $db;
 
