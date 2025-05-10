@@ -1,0 +1,6 @@
+{
+    "require": {
+        "guzzlehttp/guzzle": "^7.9",
+        "php-text-analysis/php-text-analysis": "^1.9"
+    }
+}

@@ -1,0 +1,103 @@
+/* Police de base */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #e6ecf8; /* Bleu très clair élégant */
+    color: #69aef3; /* Bleu-gris foncé chic */
+    margin: 0;
+    padding: 0;
+}
+
+/* Conteneur du formulaire */
+.form-container {
+    width: 100%;
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background-color: #87c5ef; /* Bleu nuit élégant */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+/* Animation pour faire apparaître le formulaire */
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Titres */
+h2 {
+    text-align: center;
+    color: #8bb5fe; /* Bleu profond */
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+/* Style des champs de saisie */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #5d7fa3; /* Bleu doux élégant */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #7a9cb8; /* Bleu acier */
+    border-radius: 5px;
+    background-color: #f0f4fa; /* Bleu pâle */
+    transition: all 0.3s ease;
+}
+
+/* Effet au focus sur les champs de saisie */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #3c6382; /* Bleu plus vif */
+    box-shadow: 0 0 10px rgba(142, 187, 233, 0.3);
+    outline: none;
+}
+
+/* Style du bouton de soumission */
+.submit-btn {
+    background-color: #5e81bc; /* Bleu élégant et pro */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 25px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Effet d'animation du bouton de soumission */
+.submit-btn:hover {
+    background-color: #3a5988; /* Bleu plus profond au survol */
+    transform: scale(1.05);
+}
+
+/* Animation du bouton au focus */
+.submit-btn:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(92, 138, 199, 0.5);
+}
+
+/* Message d'erreur */
+.error-message {
+    color: #c0392b; /* Rouge élégant */
+    font-size: 14px;
+    margin-top: 10px;
+}

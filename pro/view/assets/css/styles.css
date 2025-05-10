@@ -1,0 +1,122 @@
+/* Global styles */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Changer la police */
+    background-color: #e4edf4; 
+    color: #333;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+.container {
+    max-width: 400px;
+    width: 100%;
+    padding: 25px;
+    background-color: #ffffff;
+    border-radius: 12px; /* Bords arrondis plus doux */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    animation: fadeIn 0.6s ease-out;
+}
+
+h2 {
+    font-size: 28px;
+    font-weight: bold;
+    margin-bottom: 20px;
+    color: #7657cb; 
+}
+
+p {
+    font-size: 16px;
+    margin-bottom: 20px;
+    color: #526de6;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin: 12px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px; /* Bords arrondis pour les champs de texte */
+    font-size: 16px;
+    transition: border-color 0.3s ease;
+}
+
+input:focus {
+    border-color: #9ec5f8; /* Border color on focus with the new color */
+    outline: none;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #949fff; /* Couleur des boutons */
+    color: white;
+    border: none;
+    border-radius: 8px; /* Bords arrondis pour les boutons */
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #99abfb; /* Légèrement plus sombre au survol */
+}
+
+button:active {
+    background-color: #597bf796; /* Légèrement plus sombre lorsque le bouton est pressé */
+}
+
+/* Animation for smooth transition */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+form {
+    animation: slideUp 0.6s ease-out;
+}
+
+/* Style du bouton de retour */
+.back-btn {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 16px;
+    color: #919bf9;
+    text-decoration: none;
+    padding: 8px 15px;
+    border: 1px solid #2e6bba;
+    border-radius: 8px;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.back-btn:hover {
+    background-color: #86a9f4;
+    color: #ffffff;
+}
+
+.back-btn:active {
+    background-color: #8ebaf4;
+}
+
+/* Slide up animation */
+@keyframes slideUp {
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
