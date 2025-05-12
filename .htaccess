@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /lezm/
+
+# Route everything to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
+RewriteRule ^profile$ /lezm/pro/view/Front/profile.php [L]
+
+    

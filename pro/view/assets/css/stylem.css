@@ -1,0 +1,127 @@
+/* Police de base */
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #eaf0fb; /* Bleu pastel très doux */
+    color: #81a4ec; /* Texte bleu-gris élégant */
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+}
+
+/* Barre latérale */
+.sidebar {
+    width: 250px;
+    background-color: #f8fbff; /* Fond bleu très clair */
+    border-right: 2px solid #d0dcef; /* Bord bleu-gris */
+    padding: 20px;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    left: 0;
+}
+
+/* Conteneur principal */
+.main-content {
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding-left: 480px;
+}
+
+.form-container {
+    width: 180%;
+    margin-top: 50px;
+    margin-left: 20px;
+    background-color: #ffffff; /* Blanc pur pour contraste */
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(72, 102, 136, 0.1); /* Ombre bleutée douce */
+}
+
+/* Animation pour faire apparaître le formulaire */
+.fade-in {
+    animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Titres */
+h2 {
+    text-align: center;
+    color: #5880e5; /* Bleu profond élégant */
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 30px;
+}
+
+/* Style des champs de saisie */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    color: #6680bc; /* Bleu subtil et lisible */
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #b5c7e3; /* Bord bleu clair */
+    border-radius: 5px;
+    background-color: #f4f7fb; /* Bleu très pâle */
+    transition: all 0.3s ease;
+}
+
+/* Effet au focus sur les champs de saisie */
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #456aa3;
+    box-shadow: 0 0 10px rgba(130, 159, 201, 0.3);
+    outline: none;
+}
+
+/* Style du bouton de soumission */
+.submit-btn {
+    background-color: #3a5ba0; /* Bleu riche et pro */
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    font-size: 16px;
+    border-radius: 25px;
+    width: 100%;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+/* Effet d'animation du bouton de soumission */
+.submit-btn:hover {
+    background-color: #4869a5; /* Bleu foncé au survol */
+    transform: scale(1.05);
+}
+
+/* Animation du bouton au focus */
+.submit-btn:focus {
+    outline: none;
+    box-shadow: 0 0 8px rgba(134, 162, 207, 0.5);
+}
+
+/* Message d'erreur */
+.error-message {
+    color: #c0392b;
+    font-size: 14px;
+    margin-top: 10px;
+}

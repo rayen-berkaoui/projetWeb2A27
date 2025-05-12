@@ -1,0 +1,203 @@
+/* Couleur de fond principale */
+body {
+    background-color: #e6effc; /* Bleu très doux et pastel */
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: flex-start;
+    min-height: 100vh;
+}
+
+/* Barre latérale */
+.sidebar {
+    width: 250px;
+    background-color: #375a7f; /* Bleu foncé élégant */
+    padding: 20px;
+    position: fixed;
+    height: 100%;
+    left: 0;
+    top: 0;
+    z-index: 100;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Animation de la barre latérale */
+
+
+/* Logo dans la barre latérale */
+.sidebar .logo img {
+    width: 80%;
+    height: auto;
+    margin-bottom: 40px;
+}
+
+/* Navigation */
+.sidebar nav {
+    margin-top: 20px;
+}
+
+.sidebar nav a {
+    display: block;
+    padding: 10px;
+    color: #c7daf7; /* Bleu clair sur fond foncé */
+    text-decoration: none;
+    margin-bottom: 10px;
+    transition: background-color 0.3s ease, padding-left 0.3s ease;
+}
+
+.sidebar nav a:hover {
+    background-color: #5b8dd8; /* Bleu clair vif */
+    border-radius: 5px;
+    padding-left: 15px;
+}
+
+/* Contenu principal */
+.main-content {
+    margin-left: 250px;
+    padding: 20px;
+    width: calc(100% - 270px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Titre */
+h1 {
+    color: #2e4a8f; /* Bleu moyen */
+    margin-bottom: 50px;
+    font-size: 28px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    text-align: right;
+    margin-right: 410px;
+    margin-left: 70px;
+    letter-spacing: 1px;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.08);
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+h1:hover {
+    color: #4a6fc1;
+    transform: scale(1.05);
+}
+
+/* Section des boutons */
+.user-actions {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 50px;
+    padding: 0 40px;
+}
+
+.left-buttons,
+.right-buttons {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Style général des boutons */
+.btn-ajouter,
+.btn-modifier,
+.btn-supprimer {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    background-color: #4f78c7; /* Bleu élégant */
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.08);
+}
+
+.btn-ajouter:hover,
+.btn-modifier:hover,
+.btn-supprimer:hover {
+    background-color: #355ca0;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
+}
+
+/* Conteneur du tableau */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 10px;
+}
+
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: #f4f4f4;
+}
+
+.user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover sur les lignes */
+.user-table tr:hover {
+    background-color: #c8daf7;
+    transform: scale(1.02);
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+
+/* Mise en surbrillance */
+.highlight {
+    background-color: #ffeb3b; /* Jaune clair */
+    font-weight: bold;
+}
+
+/* Autres styles existants */
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.user-table th, .user-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.user-table th {
+    background-color: #f4f4f4;
+}
+
+.user-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.search-container {
+    margin-bottom: 20px;
+}
+
+#search {
+    padding: 10px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    margin-left: 10px;
+    cursor: pointer;
+}

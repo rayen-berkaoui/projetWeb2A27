@@ -1,0 +1,6 @@
+{
+    "require": {
+        "tecnickcom/tcpdf": "^6.9",
+        "psr/log": "^3.0"
+    }
+}
