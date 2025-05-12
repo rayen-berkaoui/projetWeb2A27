@@ -2,6 +2,6 @@
 
 class LoginController {
     public function index() {
-        require_once 'view/admin/pages/login.php';
+        require_once __DIR__ . '/../../../../view/admin/pages/login.php';
     }
 }

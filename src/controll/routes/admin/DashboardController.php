@@ -3,18 +3,7 @@ class DashboardController
 {
     public function index()
     {
-        $data = [
-            'page_title' => 'Dashboard Overview',
-            'active_menu' => 'dashboard',
-            'stats' => [
-                'total_users' => 1245,
-                'active_projects' => 28,
-                'pending_tasks' => 14,
-                'revenue' => 28450
-            ]
-        ];
-
-        $this->renderView('admin/pages/dashboard', $data);
+        require_once __DIR__ . '/../../../../view/admin/pages/dashboard.php';
     }
 
     protected function renderView($viewPath, $data = [])
